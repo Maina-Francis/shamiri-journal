@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { format } from 'date-fns';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface EntryCardProps {
