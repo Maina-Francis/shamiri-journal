@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { PenLine, LayoutDashboard, Sparkles, ArrowRight, Book, Calendar, BarChart2 } from 'lucide-react';
+import { PenLine, LayoutDashboard, Sparkles, ArrowRight, Book, Calendar, BarChart2, Brain } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,11 +23,11 @@ const Home = () => {
             <AnimatedContainer delay={100}>
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-                  <span className="bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Reflect</span>
+                  <span className="bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Shamiri Journal</span>
                   <span className="block mt-1">Your AI-powered journaling companion</span>
                 </h1>
                 <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Document your thoughts, gain insights, and track your personal growth with AI-powered analysis and a beautiful minimalist interface.
+                  Transform your self-reflection practice with our AI-enhanced journaling app. Shamiri Journal helps you document your thoughts, gain deep insights, and track your personal growth with powerful analysis and a beautiful interface.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Button 
@@ -67,9 +67,9 @@ const Home = () => {
           <AnimatedContainer animation="slide-up">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">How It Works</div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Simple, powerful journaling</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Experience the Shamiri Difference</h2>
               <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Our AI-powered journaling platform helps you reflect, analyze, and grow with intuitive tools and meaningful insights.
+                Our AI-powered journaling platform leverages advanced language models to help you reflect deeper, analyze patterns in your thinking, and grow with meaningful insights.
               </p>
             </div>
           </AnimatedContainer>
@@ -83,7 +83,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold">Write & Reflect</h3>
                   <p className="text-gray-500 mt-2">
-                    Journal your thoughts in our distraction-free editor with AI-powered suggestions and prompts.
+                    Journal your thoughts in our distraction-free editor with AI-powered suggestions and personalized prompts to inspire deeper reflection.
                   </p>
                 </CardContent>
               </Card>
@@ -93,11 +93,11 @@ const Home = () => {
               <Card className="glass-card border-none">
                 <CardContent className="pt-6">
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
-                    <Book className="h-5 w-5 text-accent" />
+                    <Brain className="h-5 w-5 text-accent" />
                   </div>
-                  <h3 className="text-xl font-bold">Organize</h3>
+                  <h3 className="text-xl font-bold">AI-Powered Insights</h3>
                   <p className="text-gray-500 mt-2">
-                    Categorize entries and use AI to automatically tag and organize your journal content.
+                    Our advanced AI analyzes your entries to reveal patterns, track emotional trends, and offer personalized insights to promote self-awareness.
                   </p>
                 </CardContent>
               </Card>
@@ -109,9 +109,9 @@ const Home = () => {
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
                     <BarChart2 className="h-5 w-5 text-accent" />
                   </div>
-                  <h3 className="text-xl font-bold">Gain Insights</h3>
+                  <h3 className="text-xl font-bold">Track Your Growth</h3>
                   <p className="text-gray-500 mt-2">
-                    Discover patterns and growth opportunities with AI-powered analytics and personalized insights.
+                    Visualize your personal growth journey with interactive charts and meaningful metrics that showcase your progress over time.
                   </p>
                 </CardContent>
               </Card>

@@ -2,7 +2,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { PenLine, BarChart2, Settings } from 'lucide-react';
+import { PenLine, BarChart2, Settings, LogIn } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const location = useLocation();
@@ -22,7 +23,7 @@ const Header = () => {
               to="/" 
               className="flex items-center space-x-2"
             >
-              <span className="text-lg font-semibold bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Reflect</span>
+              <span className="text-lg font-semibold bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Shamiri Journal</span>
             </Link>
           </div>
           
@@ -47,8 +48,11 @@ const Header = () => {
             </ul>
           </div>
           
-          <div className="md:hidden flex items-center">
-            {/* Mobile menu button - can be implemented later */}
+          <div className="flex items-center">
+            <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <LogIn className="h-4 w-4" />
+              <span>Sign In</span>
+            </Button>
           </div>
         </div>
       </nav>
