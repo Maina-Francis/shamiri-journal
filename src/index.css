@@ -57,29 +57,10 @@
   
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 
   html {
     @apply scroll-smooth;
-  }
-}
-
-@layer utilities {
-  .glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-soft;
-  }
-  
-  .glass-card {
-    @apply bg-white/90 backdrop-blur-sm border border-white/20 shadow-soft rounded-lg;
-  }
-  
-  .page-transition-in {
-    @apply opacity-0 translate-y-4 animate-[fade-in_0.5s_forwards,slide-up_0.5s_forwards];
-  }
-  
-  .focus-ring {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all;
   }
 }
 
