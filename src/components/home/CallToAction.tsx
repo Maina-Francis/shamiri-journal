@@ -9,24 +9,24 @@ const CallToAction = () => {
   const navigate = useNavigate();
   
   return (
-    <section className="py-20 bg-accent/5">
+    <section className="py-20 bg-gradient-to-b from-white to-accent/5">
       <div className="container px-4 md:px-6">
         <AnimatedContainer animation="slide-up">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Ready to start your journaling journey?</h2>
-              <p className="max-w-[700px] mx-auto text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Join thousands of others who have discovered the power of AI-enhanced self-reflection with Shamiri Journal.
+          <div className="flex flex-col items-center text-center space-y-6 max-w-3xl mx-auto">
+            <div className="space-y-3">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Start your journaling journey today</h2>
+              <p className="text-gray-600 md:text-xl/relaxed lg:text-xl/relaxed">
+                Join thousands who have transformed their self-reflection practice with Shamiri Journal.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 min-[400px]:flex-row justify-center pt-4">
-              <Button size="lg" onClick={() => navigate('/journal')} className="w-full sm:w-auto group">
-                Start Writing
+            <div className="flex flex-col sm:flex-row gap-4 min-[400px]:flex-row justify-center pt-6 w-full max-w-md mx-auto">
+              <Button size="lg" onClick={() => navigate('/journal')} className="w-full group bg-accent hover:bg-accent/90">
+                Get Started for Free
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate('/insights')} className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" onClick={() => navigate('/insights')} className="w-full">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Explore Features
+                See Features
               </Button>
             </div>
           </div>
