@@ -13,9 +13,10 @@ import CallToAction from '@/components/home/CallToAction';
 
 const Home = () => {
   const navigate = useNavigate();
+  console.log("Home component rendering");
   
   return (
-    <Layout>
+    <Layout className="relative">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-b from-white to-accent/5">
         <div className="container px-4 md:px-6">
