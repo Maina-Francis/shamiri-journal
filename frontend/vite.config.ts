@@ -8,6 +8,13 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Add allowedHosts configuration to fix the blocking error
+    allowedHosts: [
+      "localhost",
+      "127.0.0.1",
+      // Allow all *.lovableproject.com domains
+      ".lovableproject.com"
+    ],
   },
   plugins: [
     react(),
