@@ -49,10 +49,12 @@ const Header = () => {
           </div>
           
           <div className="flex items-center">
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
-              <LogIn className="h-4 w-4" />
-              <span>Sign In</span>
-            </Button>
+            <Link to="/auth">
+              <Button variant="outline" size="sm" className="flex items-center gap-1">
+                <LogIn className="h-4 w-4" />
+                <span>Sign In</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
