@@ -1,0 +1,92 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+To ensure a smooth development workflow and high-quality output, here are the rules and configurations you should adhere to:
+
+1. Code Quality & Standards
+Language & Frameworks: TypeScript, React (Frontend), Node.js & Express (Backend)
+Style Guide: Follow ESLint with Airbnb rules for consistent code style.
+Formatting: Use Prettier with the following settings:
+"singleQuote": true
+"trailingComma": "all"
+"tabWidth": 2
+"semi": false
+Code Documentation:
+Functions & components must have JSDoc comments.
+API endpoints should include Swagger/OpenAPI documentation.
+Provide clear instructions for setting up the project locally (e.g., README.md).
+Include environment setup requirements (e.g., Node.js version, PostgreSQL setup).
+Provide seed data or scripts for initial database setup.
+
+
+2. Development Workflow
+Git & Commit Guidelines:
+Follow Conventional Commits format (feat:, fix:, refactor:, test:, etc.)
+Commit frequently (at least one commit per feature/task)
+Use feature branches (e.g., feature/authentication, fix/journal-bug).
+PR Review Process:
+Enforce at least one approval before merging.
+PRs should contain:
+A summary of changes
+Related issues or tasks
+Screenshots (if applicable)
+
+3. Backend Rules
+Authentication & Security:
+Use JWT with refresh tokens.
+Implement bcrypt for password hashing.
+Input validation using Zod.
+Secure API routes with middleware-based RBAC (Role-Based Access Control).
+API Design:
+Follow RESTful principles.
+Use express-async-handler for proper async error handling.
+Implement rate limiting (e.g., express-rate-limit).
+Database Rules (PostgreSQL):
+Use Prisma ORM for database interactions.
+Define indexes on frequently queried fields.
+Separate read & write operations (future-proofing for scalability).
+Testing:
+Unit Tests:
+-Write unit tests for all backend services and utility functions using Jest.
+-Mock external dependencies (e.g., database calls) in unit tests.
+Integration Tests:
+-Write integration tests for API endpoints using Supertest.
+-Test both successful and error scenarios.
+Frontend Tests:
+- Write unit tests for React components using React Testing Library.
+-Write end-to-end (E2E) tests for critical user flows using Cypress.
+Test Coverage:
+- Aim for at least 80% test coverage for both frontend and backend.
+
+4. Frontend Rules
+Component Structure:
+Follow Atomic Design principles.
+Use React Query for data fetching & caching.
+Use Zustand for global state management (lightweight & performant). Avoid prop drilling
+Styling:
+Use Tailwind CSS with a consistent theme.
+Use ShadCN for UI components.
+Performance:
+Optimize images.
+Use lazy loading & code splitting (React.lazy()).
+Ensure accessibility (a11y) best practices.
+
+5. AI Feature Guidelines 
+If implementing AI-enhanced insights:
+Use Deepseek for sentiment analysis & text classification.
+Store computed insights in the database (avoid real-time expensive computations).
+Expose AI-generated insights via a separate /insights API route.
+
+6. Deployment & CI/CD
+CI/CD Pipeline:
+Run ESLint & Prettier checks on every PR.
+Run Jest tests before merging.
+Automate Docker-based deployments (if hosting on a cloud provider).
+Environment Management:
+Use .env files for secrets & API keys.
+Configure dotenv for local development.
+Ensure secrets are never committed to the repository.
+
