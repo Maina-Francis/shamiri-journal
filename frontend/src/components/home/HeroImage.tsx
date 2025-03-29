@@ -37,7 +37,7 @@ const HeroImage = () => {
             </div>
           ) : (
             <img 
-              src="/lovable-uploads/de729820-0185-4530-bffb-2e166a7c569b.png"
+              src="/lovable-uploads/5074ebf1-5431-481b-9ca0-0adc26e090f2.png"
               alt="Person journaling with AI assistance" 
               className={`w-full h-auto object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="eager"
