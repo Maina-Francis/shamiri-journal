@@ -1,14 +1,16 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -41,9 +43,22 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, register: registerUser, isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('login');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Set active tab based on query params if present
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    if (tab === 'register' || tab === 'login') {
+      setActiveTab(tab);
+    }
+  }, [location]);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -64,19 +79,24 @@ const Auth = () => {
   });
 
   // Redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
-      navigate('/journal');
+      // Redirect to the original requested URL or to journal by default
+      const from = location.state?.from || '/journal';
+      navigate(from);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location.state]);
 
   const onLoginSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
-      const success = await login(values.email, values.password);
-      if (success) {
-        navigate('/journal');
+      const response = await login(values.email, values.password);
+      if (!response) {
+        setErrorMessage("Login failed. Please check your credentials.");
       }
+    } catch (error: any) {
+      setErrorMessage(error.message || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -84,11 +104,22 @@ const Auth = () => {
 
   const onRegisterSubmit = async (values: RegisterFormValues) => {
     setIsLoading(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
     try {
-      const success = await registerUser(values.name, values.email, values.password);
-      if (success) {
-        navigate('/journal');
+      const response = await registerUser(values.name, values.email, values.password);
+      if (response) {
+        setSuccessMessage("Registration successful! You're now logged in.");
+        toast({
+          title: "Account created",
+          description: "Your account has been created successfully.",
+        });
+        // No need to navigate as the useEffect will handle it when isAuthenticated changes
+      } else {
+        setErrorMessage("Registration failed. Please try again.");
       }
+    } catch (error: any) {
+      setErrorMessage(error.message || "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +144,19 @@ const Auth = () => {
                 <TabsTrigger value="login">Sign In</TabsTrigger>
                 <TabsTrigger value="register">Sign Up</TabsTrigger>
               </TabsList>
+              
+              {errorMessage && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
+              
+              {successMessage && (
+                <Alert className="mb-4 bg-green-50 text-green-700 border-green-200">
+                  <AlertDescription>{successMessage}</AlertDescription>
+                </Alert>
+              )}
               
               <TabsContent value="login">
                 <Form {...loginForm}>

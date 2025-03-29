@@ -50,11 +50,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (response.ok) {
           const data = await response.json();
-          setUser(data.user);
+          if (data.success) {
+            setUser(data.data.user);
+          } else {
+            throw new Error(data.error || 'Authentication failed');
+          }
         } else {
-          // If token is invalid, clear it
-          localStorage.removeItem('token');
-          setToken(null);
+          // Parse the error response
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Authentication failed');
         }
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -68,6 +72,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, [token]);
 
+  const handleApiResponse = async (response: Response) => {
+    const data = await response.json();
+    
+    if (!response.ok) {
+      // Extract the error message from the API response
+      const errorMessage = data.error || data.message || 'An error occurred';
+      throw new Error(errorMessage);
+    }
+    
+    return data;
+  };
+
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
@@ -78,33 +94,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const data = await handleApiResponse(response);
 
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setToken(data.token);
-        setUser(data.user);
+      if (data.success) {
+        localStorage.setItem('token', data.data.token);
+        setToken(data.data.token);
+        setUser(data.data.user);
+        
         toast({
           title: 'Login successful',
-          description: 'Welcome back!',
+          description: data.message || 'Welcome back!',
         });
         return true;
-      } else {
-        toast({
-          title: 'Login failed',
-          description: data.message || 'Invalid credentials',
-          variant: 'destructive',
-        });
-        return false;
       }
-    } catch (error) {
+      
+      return false;
+    } catch (error: any) {
       console.error('Login error:', error);
       toast({
-        title: 'Login error',
-        description: 'Could not connect to the server',
+        title: 'Login failed',
+        description: error.message || 'Could not connect to the server',
         variant: 'destructive',
       });
-      return false;
+      throw error;
     }
   };
 
@@ -118,33 +130,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ name, email, password }),
       });
 
-      const data = await response.json();
+      const data = await handleApiResponse(response);
 
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setToken(data.token);
-        setUser(data.user);
+      if (data.success) {
+        localStorage.setItem('token', data.data.token);
+        setToken(data.data.token);
+        setUser(data.data.user);
+        
         toast({
           title: 'Registration successful',
-          description: 'Your account has been created',
+          description: data.message || 'Your account has been created',
         });
         return true;
-      } else {
-        toast({
-          title: 'Registration failed',
-          description: data.message || 'Could not create account',
-          variant: 'destructive',
-        });
-        return false;
       }
-    } catch (error) {
+      
+      return false;
+    } catch (error: any) {
       console.error('Registration error:', error);
       toast({
-        title: 'Registration error',
-        description: 'Could not connect to the server',
+        title: 'Registration failed',
+        description: error.message || 'Could not create account',
         variant: 'destructive',
       });
-      return false;
+      throw error;
     }
   };
 

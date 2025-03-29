@@ -2,18 +2,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { PenLine, BarChart2, Settings, LogIn } from 'lucide-react';
+import { LogIn, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Header = () => {
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
   
-  const navItems = [
-    { path: '/journal', label: 'Journal', icon: <PenLine className="h-4 w-4" /> },
-    { path: '/insights', label: 'Insights', icon: <BarChart2 className="h-4 w-4" /> },
-    { path: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
-  ];
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,34 +30,39 @@ const Header = () => {
             </Link>
           </div>
           
-          <div className="hidden md:block">
-            <ul className="flex items-center space-x-1">
-              {navItems.map((item) => (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "px-4 py-2 rounded-md text-sm flex items-center space-x-1 transition-all focus-ring",
-                      location.pathname === item.path
-                        ? "bg-accent/10 text-accent"
-                        : "text-foreground/70 hover:text-foreground hover:bg-accent/5"
-                    )}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
           <div className="flex items-center">
-            <Link to="/auth">
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
-                <LogIn className="h-4 w-4" />
-                <span>Sign In</span>
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="" alt={user?.name} />
+                      <AvatarFallback>
+                        {user?.name.substring(0, 2).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/journal">Journal</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/insights">Insights</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => logout()}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth">
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
+                  <LogIn className="h-4 w-4" />
+                  <span>Sign In</span>
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
