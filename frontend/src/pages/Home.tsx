@@ -18,26 +18,26 @@ const Home = () => {
   return (
     <Layout className="relative">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-b from-white to-accent/5">
+      <section className="relative overflow-hidden py-8 md:py-16 lg:py-24 bg-gradient-to-b from-white to-accent/5">
         <div className="container px-4 md:px-6">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             <AnimatedContainer delay={100}>
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   <span>AI-Powered Journaling</span>
                 </div>
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl">
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl">
                   <span className="text-accent">Shamiri Journal</span>
                   <span className="block mt-1">Reflect, Grow, and Thrive</span>
                 </h1>
-                <p className="max-w-[600px] text-gray-600 md:text-xl/relaxed lg:text-xl/relaxed">
+                <p className="max-w-[600px] text-gray-600 text-sm md:text-base lg:text-xl/relaxed">
                   Transform your self-reflection with our AI-enhanced journaling companion that helps you document thoughts, gain deep insights, and track your personal growth.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
                   <Button 
                     size="lg" 
-                    onClick={() => navigate('/journal')}
+                    onClick={() => navigate('/auth')}
                     className="group bg-accent hover:bg-accent/90"
                   >
                     <PenLine className="mr-2 h-4 w-4" />
@@ -47,7 +47,7 @@ const Home = () => {
                   <Button 
                     variant="outline" 
                     size="lg"
-                    onClick={() => navigate('/insights')}
+                    onClick={() => navigate('/auth')}
                   >
                     <Sparkles className="mr-2 h-4 w-4" />
                     Explore Features
@@ -61,18 +61,18 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-                  <p className="text-sm text-gray-500">Trusted by thousands of users worldwide</p>
+                  <p className="text-xs md:text-sm text-gray-500">Trusted by thousands of users worldwide</p>
                 </div>
               </div>
             </AnimatedContainer>
-            <AnimatedContainer delay={300}>
+            <AnimatedContainer delay={300} className="md:px-6">
               <HeroImage />
             </AnimatedContainer>
           </div>
         </div>
 
         {/* Feature highlights */}
-        <div className="container px-4 md:px-6 mt-16">
+        <div className="container px-4 md:px-6 mt-12 md:mt-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { 
@@ -94,7 +94,7 @@ const Home = () => {
               <AnimatedContainer 
                 key={i} 
                 delay={400 + (i * 100)} 
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6 hover:shadow-md transition-shadow"
               >
                 <div className="rounded-full bg-accent/10 w-10 h-10 flex items-center justify-center mb-4">
                   {feature.icon}
