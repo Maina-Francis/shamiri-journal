@@ -10,7 +10,7 @@ const HeroImage = () => {
       <div className="relative rounded-xl overflow-hidden shadow-xl border border-gray-100 bg-white/50 backdrop-blur-sm">
         {/* Hero image */}
         <div className="relative w-full overflow-hidden rounded-lg">
-          {/* Responsive image */}
+          {/* Responsive image with correct path */}
           <img 
             src="/heroImage.jpg" 
             alt="Person journaling with AI assistance" 
