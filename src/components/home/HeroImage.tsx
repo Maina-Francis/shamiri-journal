@@ -9,8 +9,8 @@ const HeroImage = () => {
     <div className="relative mx-auto w-full max-w-[550px] aspect-[4/3] overflow-hidden rounded-2xl">
       <div className="absolute inset-0 bg-gradient-to-br from-accent/30 to-accent/10 rounded-2xl z-10"></div>
       <img 
-        src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-        alt="AI-powered journaling application" 
+        src="https://images.unsplash.com/photo-1517842645767-c639042777db?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+        alt="Journal and coffee on a table" 
         className="h-full w-full object-cover rounded-2xl"
       />
       {/* Floating UI elements to show AI features */}
@@ -36,7 +36,7 @@ const HeroImage = () => {
         </div>
       </div>
       
-      {/* New AI-themed floating element */}
+      {/* AI-themed floating element */}
       <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
         <div className="glass p-3 rounded-xl max-w-[200px]">
           <div className="text-xs">
