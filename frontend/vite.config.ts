@@ -16,10 +16,12 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: true,
   },
   server: {
     port: 5173,
     strictPort: true,
     host: true,
+    open: true,
   }
 })
