@@ -32,12 +32,12 @@ const HeroImage = () => {
             <div className="w-full h-64 sm:h-80 md:h-96 bg-gradient-to-r from-blue-50 to-indigo-100 flex items-center justify-center">
               <div className="text-center p-6">
                 <PenLine className="h-16 w-16 mx-auto mb-4 text-accent opacity-80" />
-                <p className="text-accent/80 font-medium">Reflect: Your AI Journaling Companion</p>
+                <p className="text-accent/80 font-medium">Shamiri: Your AI Journaling Companion</p>
               </div>
             </div>
           ) : (
             <img 
-              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+              src="/lovable-uploads/de729820-0185-4530-bffb-2e166a7c569b.png"
               alt="Person journaling with AI assistance" 
               className={`w-full h-auto object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="eager"

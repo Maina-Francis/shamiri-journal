@@ -21,7 +21,7 @@ const Home = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
           <AnimatedContainer delay={100}>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
-              <span className="bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Reflect</span>
+              <span className="bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Shamiri</span>
               <span className="block text-foreground mt-2">Your personal journaling companion</span>
             </h1>
             
