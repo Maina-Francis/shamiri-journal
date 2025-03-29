@@ -9,10 +9,11 @@ const HeroImage = () => {
     <div className="relative mx-auto w-full max-w-[550px] aspect-[4/3] overflow-hidden rounded-2xl">
       <div className="absolute inset-0 bg-gradient-to-br from-accent/30 to-accent/10 rounded-2xl z-10"></div>
       <img 
-        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-        alt="Person journaling on a laptop" 
+        src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+        alt="AI-powered journaling application" 
         className="h-full w-full object-cover rounded-2xl"
       />
+      {/* Floating UI elements to show AI features */}
       <div className="absolute bottom-0 right-0 m-4 lg:m-6 z-20">
         <div className="glass p-3 rounded-xl max-w-[250px]">
           <div className="flex items-center space-x-2">
@@ -31,6 +32,16 @@ const HeroImage = () => {
           <div className="text-sm">
             <span className="text-accent font-medium">Mood detected: </span>
             <span>Optimistic 😊</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* New AI-themed floating element */}
+      <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
+        <div className="glass p-3 rounded-xl max-w-[200px]">
+          <div className="text-xs">
+            <span className="font-medium block mb-1">AI Insights:</span>
+            <span className="text-gray-600 block">Your writing shows growth in positive thinking compared to last week.</span>
           </div>
         </div>
       </div>
