@@ -11,4 +11,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // Ensure public directory is properly served
+  publicDir: 'public',
 })
