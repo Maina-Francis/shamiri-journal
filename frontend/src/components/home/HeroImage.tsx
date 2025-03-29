@@ -8,12 +8,11 @@ const HeroImage = () => {
   const [imageError, setImageError] = useState(false);
 
   const handleImageLoad = () => {
-    console.log("Image loaded successfully!");
     setImageLoaded(true);
   };
 
   const handleImageError = () => {
-    console.error("Failed to load image!");
+    console.error("Failed to load hero image");
     setImageError(true);
   };
 
@@ -29,23 +28,24 @@ const HeroImage = () => {
             </div>
           )}
           
-          {imageError && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-              <span className="text-red-500">Failed to load image</span>
+          {imageError ? (
+            <div className="w-full h-64 sm:h-80 md:h-96 bg-gradient-to-r from-blue-50 to-indigo-100 flex items-center justify-center">
+              <div className="text-center p-6">
+                <PenLine className="h-16 w-16 mx-auto mb-4 text-accent opacity-80" />
+                <p className="text-accent/80 font-medium">Reflect: Your AI Journaling Companion</p>
+              </div>
             </div>
+          ) : (
+            <img 
+              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+              alt="Person journaling with AI assistance" 
+              className={`w-full h-auto object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              loading="eager"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              style={{ minHeight: '240px', maxHeight: '360px' }}
+            />
           )}
-          
-          {/* Responsive image with correct path */}
-          <img 
-            src="/heroImage.jpg" 
-            alt="Person journaling with AI assistance" 
-            className={`w-full h-auto object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            loading="eager"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-            style={{ minHeight: '240px' }}
-          />
           
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
