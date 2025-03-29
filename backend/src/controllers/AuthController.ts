@@ -9,6 +9,7 @@ export class AuthController {
       const { user, token } = await AuthService.register(userData)
       res.status(201).json({
         success: true,
+        message: 'Registration successful! Welcome to our platform.',
         data: {
           user: user.toJSON(),
           token,
@@ -17,6 +18,7 @@ export class AuthController {
     } catch (error) {
       res.status(400).json({
         success: false,
+        message: error instanceof Error ? error.message : 'Registration failed',
         error: error instanceof Error ? error.message : 'Registration failed',
       })
     }
@@ -28,6 +30,7 @@ export class AuthController {
       const { user, token } = await AuthService.login(email, password)
       res.json({
         success: true,
+        message: 'Login successful! Welcome back.',
         data: {
           user: user.toJSON(),
           token,
@@ -36,6 +39,7 @@ export class AuthController {
     } catch (error) {
       res.status(401).json({
         success: false,
+        message: error instanceof Error ? error.message : 'Login failed',
         error: error instanceof Error ? error.message : 'Login failed',
       })
     }
@@ -51,6 +55,7 @@ export class AuthController {
       const user = await AuthService.getCurrentUser(token)
       res.json({
         success: true,
+        message: 'User profile retrieved successfully',
         data: {
           user: user.toJSON(),
         },
@@ -58,6 +63,7 @@ export class AuthController {
     } catch (error) {
       res.status(401).json({
         success: false,
+        message: error instanceof Error ? error.message : 'Authentication failed',
         error: error instanceof Error ? error.message : 'Authentication failed',
       })
     }

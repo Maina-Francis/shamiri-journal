@@ -27,9 +27,20 @@ export const errorHandler = (
     message = 'A record with this value already exists'
   }
 
+  // Handle session expiration
+  if (err.message === 'Session expired' || err.message === 'Session expired due to inactivity') {
+    statusCode = 401
+  }
+
+  // Handle invalid token
+  if (err.message === 'Invalid token' || err.message === 'No token provided') {
+    statusCode = 401
+  }
+
   res.status(statusCode).json({
     success: false,
     message,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    error: message,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   })
 } 
