@@ -7,34 +7,20 @@ const HeroImage = () => {
   return (
     <div className="relative flex items-center justify-center">
       {/* Main image container with animation */}
-      <div className="relative rounded-xl overflow-hidden shadow-xl border border-gray-100 bg-white/50 backdrop-blur-sm p-4">
-        {/* Stylized journal and AI elements */}
-        <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden flex items-center justify-center">
-          {/* Animated journal */}
-          <div className="relative w-3/4 h-3/4 animate-float">
-            {/* Journal cover */}
-            <div className="absolute inset-0 bg-accent/10 rounded-lg transform rotate-3 shadow-md"></div>
-            
-            {/* Journal pages */}
-            <div className="absolute inset-0 bg-white rounded-lg transform -rotate-2 shadow-sm flex flex-col p-6">
-              <div className="w-full h-4 bg-gray-100 rounded mb-3"></div>
-              <div className="w-3/4 h-4 bg-gray-100 rounded mb-3"></div>
-              <div className="w-5/6 h-4 bg-gray-100 rounded mb-3"></div>
-              <div className="w-2/3 h-4 bg-gray-100 rounded mb-3"></div>
-              
-              {/* Animated pen */}
-              <div className="absolute right-4 bottom-8 w-12 h-2 bg-accent/40 rounded-full transform -rotate-45 animate-write-slow origin-right"></div>
-            </div>
-          </div>
+      <div className="relative rounded-xl overflow-hidden shadow-xl border border-gray-100 bg-white/50 backdrop-blur-sm">
+        {/* Hero image */}
+        <div className="relative w-full overflow-hidden rounded-lg">
+          {/* Responsive image */}
+          <img 
+            src="/heroImage.jpg" 
+            alt="Person journaling with AI assistance" 
+            className="w-full h-auto object-cover"
+            loading="eager"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
           
-          {/* Decorative elements */}
-          <div className="absolute top-10 right-10 text-accent/70 animate-pulse">
-            <Sparkles className="h-10 w-10" />
-          </div>
-          
-          <div className="absolute bottom-12 left-10 text-accent/70 animate-bounce-slow">
-            <Brain className="h-8 w-8" />
-          </div>
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
         </div>
         
         {/* Caption overlay */}
@@ -44,7 +30,7 @@ const HeroImage = () => {
       </div>
       
       {/* Floating AI insights bubbles */}
-      <AnimatedContainer delay={700} className="absolute -right-12 top-1/4 animate-float">
+      <AnimatedContainer delay={700} className="absolute -right-12 top-1/4 animate-float md:block hidden">
         <div className="glass-card p-3 shadow-lg rounded-lg max-w-[150px]">
           <div className="flex items-center mb-2">
             <Brain className="h-4 w-4 text-accent mr-1" />
@@ -54,7 +40,7 @@ const HeroImage = () => {
         </div>
       </AnimatedContainer>
       
-      <AnimatedContainer delay={900} className="absolute -left-16 bottom-1/4 animate-float-slow">
+      <AnimatedContainer delay={900} className="absolute -left-16 bottom-1/4 animate-float-slow md:block hidden">
         <div className="glass-card p-3 shadow-lg rounded-lg max-w-[150px]">
           <div className="flex items-center mb-2">
             <PenLine className="h-4 w-4 text-accent mr-1" />
