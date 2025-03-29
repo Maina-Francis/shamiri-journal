@@ -1,22 +1,50 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Brain, PenLine } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
 
 const HeroImage = () => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageLoad = () => {
+    console.log("Image loaded successfully!");
+    setImageLoaded(true);
+  };
+
+  const handleImageError = () => {
+    console.error("Failed to load image!");
+    setImageError(true);
+  };
+
   return (
     <div className="relative flex items-center justify-center">
       {/* Main image container with animation */}
       <div className="relative rounded-xl overflow-hidden shadow-xl border border-gray-100 bg-white/50 backdrop-blur-sm">
         {/* Hero image */}
         <div className="relative w-full overflow-hidden rounded-lg">
+          {!imageLoaded && !imageError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <span className="text-gray-400">Loading image...</span>
+            </div>
+          )}
+          
+          {imageError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <span className="text-red-500">Failed to load image</span>
+            </div>
+          )}
+          
           {/* Responsive image with correct path */}
           <img 
             src="/heroImage.jpg" 
             alt="Person journaling with AI assistance" 
-            className="w-full h-auto object-cover"
+            className={`w-full h-auto object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             loading="eager"
             sizes="(max-width: 768px) 100vw, 50vw"
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            style={{ minHeight: '240px' }}
           />
           
           {/* Overlay gradient */}
