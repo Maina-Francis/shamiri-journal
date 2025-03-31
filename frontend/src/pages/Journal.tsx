@@ -39,6 +39,7 @@ const mockEntries = [
 const Journal = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [entries, setEntries] = useState(mockEntries);
+  const [streak, setStreak] = useState(5); // Mock streak count
 
   // Find entry for selected date
   const selectedEntry = entries.find(entry => 
@@ -77,11 +78,22 @@ const Journal = () => {
     setSelectedDate(date);
   };
 
+  const handleFavoriteEntry = (id: string) => {
+    // Implementation for favoriting entries would go here
+    console.log('Favorite entry:', id);
+  };
+
+  const handleDeleteEntry = (id: string) => {
+    // Implementation for deleting entries
+    setEntries(entries.filter(entry => entry.id !== id));
+  };
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AnimatedContainer delay={100}>
-          <h1 className="text-3xl font-bold mb-6">Your Journal</h1>
+          <h1 className="text-3xl font-bold mb-2">Your Journal</h1>
+          <p className="text-muted-foreground mb-6">Write your thoughts and reflect on your journey</p>
         </AnimatedContainer>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -91,6 +103,14 @@ const Journal = () => {
               initialContent={selectedEntry?.content || ''}
               onSave={handleSaveEntry}
             />
+            
+            {streak > 0 && (
+              <AnimatedContainer delay={150} className="text-center">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium">
+                  🔥 You've written {streak} days in a row!
+                </div>
+              </AnimatedContainer>
+            )}
           </div>
           
           <div className="space-y-6">
@@ -121,6 +141,8 @@ const Journal = () => {
                         content={entry.content}
                         mood={entry.mood}
                         onClick={() => handleSelectEntry(new Date(entry.date))}
+                        onFavorite={() => handleFavoriteEntry(entry.id)}
+                        onDelete={() => handleDeleteEntry(entry.id)}
                       />
                     ))
                   }

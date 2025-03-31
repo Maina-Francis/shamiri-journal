@@ -5,10 +5,17 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import AnimatedContainer from '../ui/AnimatedContainer';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface JournalEntry {
   id: string;
   date: Date;
+  content?: string;
   excerpt?: string;
   mood?: string;
 }
@@ -52,8 +59,12 @@ const Calendar = ({ entries, onSelectDate, selectedDate }: CalendarProps) => {
     return entries.some(entry => isSameDay(new Date(entry.date), date));
   };
 
+  const getEntryForDate = (date: Date) => {
+    return entries.find(entry => isSameDay(new Date(entry.date), date));
+  };
+
   return (
-    <AnimatedContainer className="glass-card p-6 w-full">
+    <AnimatedContainer className="glass-card p-6 w-full shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-medium">{format(currentMonth, 'MMMM yyyy')}</h3>
         <div className="flex space-x-1">
@@ -82,14 +93,16 @@ const Calendar = ({ entries, onSelectDate, selectedDate }: CalendarProps) => {
         {daysInMonth.map((day) => {
           const hasJournalEntry = hasEntry(day);
           const isSelected = selectedDate && isSameDay(day, selectedDate);
+          const entry = getEntryForDate(day);
+          const today = isToday(day);
           
-          return (
+          const calendarDay = (
             <button
               key={day.toString()}
               onClick={() => onSelectDate(day)}
               className={cn(
                 "p-2 text-sm rounded-full flex items-center justify-center relative transition-all h-9 w-9 mx-auto focus-ring",
-                isToday(day) && "font-semibold text-accent",
+                today && !isSelected && "bg-accent/20 font-semibold",
                 isSelected && "bg-accent text-white",
                 hasJournalEntry && !isSelected && "bg-accent/10",
                 !isSelected && "hover:bg-accent/5"
@@ -101,6 +114,29 @@ const Calendar = ({ entries, onSelectDate, selectedDate }: CalendarProps) => {
               )}
             </button>
           );
+          
+          if (hasJournalEntry && entry?.content) {
+            // Strip HTML for tooltip display
+            const plainContent = entry.content.replace(/<[^>]*>/g, '');
+            const excerpt = plainContent.length > 60 
+              ? plainContent.substring(0, 60).trim() + '...' 
+              : plainContent;
+              
+            return (
+              <TooltipProvider key={day.toString()}>
+                <Tooltip delayDuration={300}>
+                  <TooltipTrigger asChild>
+                    {calendarDay}
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-[200px] p-2">
+                    <p className="text-xs">{excerpt}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          }
+          
+          return calendarDay;
         })}
       </div>
     </AnimatedContainer>
