@@ -3,8 +3,6 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
-yarn.lock
 
 # Environment variables
 .env
@@ -14,30 +12,35 @@ yarn.lock
 .env.test
 .env.production
 
-# TypeScript
+# Build output
 dist/
 build/
-*.tsbuildinfo
+out/
 
-# Prisma
-prisma/*.db
-prisma/migrations/
+# Coverage reports
+coverage/
 
 # Logs
 logs/
 *.log
 
-# IDE and editor files
+# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Test coverage
-coverage/
-.nyc_output/
+# TypeScript
+*.tsbuildinfo
 
 # Temporary files
 tmp/
@@ -45,6 +48,10 @@ temp/
 
 # Debug
 .debug/
+
+# Prisma
+prisma/*.db
+prisma/migrations/
 
 # Optional npm cache directory
 .npm
@@ -66,8 +73,6 @@ temp/
 .env.test.local
 .env.production.local
 .env
-
-
 
 # Serverless directories
 .serverless/
