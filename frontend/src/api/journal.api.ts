@@ -6,6 +6,10 @@ export interface JournalEntry {
   title: string;
   content: string;
   category?: string;
+  isFavorite: boolean;
+  mood?: string;
+  tags?: string[];
+  aiInsights?: any;
   createdAt: string;
   updatedAt: string;
 }
@@ -15,6 +19,9 @@ export interface JournalQueryParams {
   limit?: number;
   category?: string;
   search?: string;
+  favorite?: boolean;
+  mood?: string;
+  tags?: string[];
 }
 
 export interface JournalResponse {
@@ -27,8 +34,16 @@ export interface JournalResponse {
   };
 }
 
+export interface JournalStats {
+  totalEntries: number;
+  favoriteEntries: number;
+  categories: { name: string; count: number }[];
+  moods: { name: string; count: number }[];
+  recentActivity: { date: string; count: number }[];
+}
+
 // Create a new journal entry
-export const createJournal = async (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>): Promise<JournalEntry> => {
+export const createJournal = async (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt' | 'isFavorite' | 'tags' | 'aiInsights'>): Promise<JournalEntry> => {
   const response = await fetch(`${API_URL}/journals`, {
     method: 'POST',
     headers: {
@@ -54,6 +69,9 @@ export const getJournals = async (params: JournalQueryParams = {}): Promise<Jour
   if (params.limit) queryParams.append('limit', params.limit.toString());
   if (params.category) queryParams.append('category', params.category);
   if (params.search) queryParams.append('search', params.search);
+  if (params.favorite !== undefined) queryParams.append('favorite', params.favorite.toString());
+  if (params.mood) queryParams.append('mood', params.mood);
+  if (params.tags && params.tags.length > 0) queryParams.append('tags', params.tags.join(','));
   
   const url = `${API_URL}/journals?${queryParams.toString()}`;
   
@@ -67,6 +85,23 @@ export const getJournals = async (params: JournalQueryParams = {}): Promise<Jour
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to fetch journal entries');
+  }
+
+  return response.json();
+};
+
+// Get journal statistics
+export const getJournalStats = async (): Promise<JournalStats> => {
+  const response = await fetch(`${API_URL}/journals/stats`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to fetch journal statistics');
   }
 
   return response.json();
@@ -103,6 +138,25 @@ export const updateJournal = async (id: string, data: Partial<JournalEntry>): Pr
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to update journal entry');
+  }
+
+  return response.json();
+};
+
+// Toggle favorite status
+export const toggleJournalFavorite = async (id: string, isFavorite: boolean): Promise<JournalEntry> => {
+  const response = await fetch(`${API_URL}/journals/${id}/favorite`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    },
+    body: JSON.stringify({ isFavorite })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to update favorite status');
   }
 
   return response.json();

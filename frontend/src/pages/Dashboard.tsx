@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { PlusCircle, Search, Trash2 } from 'lucide-react';
+import { PlusCircle, Search, Trash2, BookOpen, Star, BarChart3, Calendar as CalendarIcon } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -10,6 +10,8 @@ import {
   createJournal,
   updateJournal,
   deleteJournal,
+  toggleJournalFavorite,
+  getJournalStats,
   JournalQueryParams,
 } from '@/api/journal.api';
 import Layout from '@/components/layout/Layout';
@@ -19,6 +21,9 @@ import DeleteConfirmDialog from '@/components/journal/DeleteConfirmDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
+import StatCard from '@/components/dashboard/StatCard';
+import FavoritesList from '@/components/dashboard/FavoritesList';
+import { BarChart } from '@/components/ui/charts';
 import {
   Pagination,
   PaginationContent,
@@ -27,6 +32,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/useDebounce';
 
 const Dashboard = () => {
@@ -37,7 +48,8 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
-  const [limit] = useState(9);
+  const [limit] = useState(6);
+  const [activeTab, setActiveTab] = useState('all');
   
   // Dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -50,11 +62,17 @@ const Dashboard = () => {
     page,
     limit,
     search: debouncedSearchTerm || undefined,
+    ...(activeTab === 'favorites' ? { favorite: true } : {}),
   };
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['journals', queryParams],
     queryFn: () => getJournals(queryParams),
+  });
+
+  const { data: statsData, isLoading: isLoadingStats } = useQuery({
+    queryKey: ['journal-stats'],
+    queryFn: () => getJournalStats(),
   });
 
   // Mutations
@@ -67,6 +85,7 @@ const Dashboard = () => {
       });
       setCreateDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ['journals'] });
+      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
     },
     onError: (error: Error) => {
       toast({
@@ -87,10 +106,34 @@ const Dashboard = () => {
       });
       setEditDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ['journals'] });
+      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
     },
     onError: (error: Error) => {
       toast({
         title: "Failed to update journal",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const favoriteMutation = useMutation({
+    mutationFn: ({ id, isFavorite }: { id: string; isFavorite: boolean }) => 
+      toggleJournalFavorite(id, isFavorite),
+    onSuccess: (data) => {
+      toast({
+        title: data.isFavorite ? "Added to Favorites" : "Removed from Favorites",
+        description: data.isFavorite 
+          ? "Journal entry added to your favorites." 
+          : "Journal entry removed from your favorites.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['journals'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to update favorite status",
         description: error.message,
         variant: "destructive",
       });
@@ -124,6 +167,8 @@ const Dashboard = () => {
       });
       setDeleteDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ['journals'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
     },
     onError: (error: Error, _, context) => {
       // If the mutation fails, roll back to the previous value
@@ -138,11 +183,11 @@ const Dashboard = () => {
   });
 
   // Event handlers
-  const handleCreate = (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreate = (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt' | 'isFavorite' | 'tags' | 'aiInsights'>) => {
     createMutation.mutate(data);
   };
 
-  const handleUpdate = (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleUpdate = (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt' | 'isFavorite' | 'tags' | 'aiInsights'>) => {
     if (selectedJournal) {
       updateMutation.mutate({
         id: selectedJournal.id,
@@ -161,11 +206,31 @@ const Dashboard = () => {
     setDeleteDialogOpen(true);
   };
 
+  const handleFavoriteClick = (journal: JournalEntry, isFavorite: boolean) => {
+    favoriteMutation.mutate({
+      id: journal.id,
+      isFavorite,
+    });
+  };
+
   const handleConfirmDelete = () => {
     if (selectedJournal) {
       deleteMutation.mutate(selectedJournal.id);
     }
   };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setPage(1); // Reset page when changing tabs
+  };
+
+  // Format activity data for chart
+  const activityData = statsData?.recentActivity 
+    ? statsData.recentActivity.map((item: any) => ({
+        date: new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }),
+        entries: Number(item.count),
+      })).reverse()
+    : [];
 
   // Render functions
   const renderJournalCards = () => {
@@ -209,6 +274,7 @@ const Dashboard = () => {
         journal={journal}
         onEdit={handleEditClick}
         onDelete={handleDeleteClick}
+        onFavorite={handleFavoriteClick}
       />
     ));
   };
@@ -220,7 +286,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             <p className="text-muted-foreground">
-              Welcome back, {user?.name}! Manage your journal entries here.
+              Welcome back, {user?.name}! Here's an overview of your journaling activity.
             </p>
           </div>
           <Button onClick={() => setCreateDialogOpen(true)}>
@@ -229,64 +295,148 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search journals..."
-              className="pl-8"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard 
+            title="Total Entries" 
+            value={isLoadingStats ? "..." : statsData?.totalEntries || 0}
+            description="All your journal entries"
+            icon={<BookOpen />}
+          />
+          <StatCard 
+            title="Favorite Entries" 
+            value={isLoadingStats ? "..." : statsData?.favoriteEntries || 0}
+            description="Your bookmarked journals"
+            icon={<Star />}
+          />
+          <StatCard 
+            title="Weekly Average" 
+            value={isLoadingStats && !activityData.length ? "..." : 
+              activityData.length ? 
+                (activityData.reduce((sum, day) => sum + day.entries, 0) / activityData.length).toFixed(1) :
+                "0"
+            }
+            description="Entries per day"
+            icon={<CalendarIcon />}
+          />
+          <StatCard 
+            title="Most Common Mood" 
+            value={isLoadingStats ? "..." : 
+              statsData?.moods && statsData.moods.length > 0 ? 
+                statsData.moods.sort((a, b) => b.count - a.count)[0].name : 
+                "None"
+            }
+            description="Based on your entries"
+            icon={<BarChart3 />}
+          />
+        </div>
+
+        {/* Activity chart and Favorites */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2">
+            <div className="bg-card rounded-lg border shadow-sm">
+              <div className="p-6">
+                <h3 className="text-lg font-medium mb-4">Recent Activity</h3>
+                {isLoadingStats ? (
+                  <Skeleton className="h-[200px] w-full" />
+                ) : activityData.length > 0 ? (
+                  <div className="h-[200px]">
+                    <BarChart 
+                      data={activityData}
+                      index="date"
+                      categories={['entries']}
+                      colors={['blue']}
+                      valueFormatter={(value) => `${value} entries`}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-[200px] bg-muted/20 rounded-md">
+                    <p className="text-muted-foreground text-sm">No recent activity data available</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-          {searchTerm && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setSearchTerm('')}
-              className="h-10"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Clear
-            </Button>
+          <div className="lg:col-span-1">
+            <FavoritesList />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <Tabs value={activeTab} onValueChange={handleTabChange}>
+              <div className="flex items-center justify-between">
+                <TabsList>
+                  <TabsTrigger value="all">All Entries</TabsTrigger>
+                  <TabsTrigger value="favorites">Favorites</TabsTrigger>
+                </TabsList>
+                <div className="relative w-full max-w-sm ml-auto">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search journals..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  {searchTerm && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setSearchTerm('')}
+                      className="absolute right-1 top-1 h-8"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <TabsContent value="all" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {renderJournalCards()}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="favorites" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {renderJournalCards()}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {data && data.meta.pages > 1 && (
+            <Pagination className="mt-6">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1} 
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: data.meta.pages }, (_, i) => i + 1).map((p) => (
+                  <PaginationItem key={p}>
+                    <PaginationLink 
+                      isActive={page === p}
+                      onClick={() => setPage(p)}
+                    >
+                      {p}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => setPage(p => Math.min(data.meta.pages, p + 1))}
+                    disabled={page === data.meta.pages}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           )}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {renderJournalCards()}
-        </div>
-
-        {data && data.meta.pages > 1 && (
-          <Pagination className="mt-6">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1} 
-                />
-              </PaginationItem>
-              
-              {Array.from({ length: data.meta.pages }, (_, i) => i + 1).map((p) => (
-                <PaginationItem key={p}>
-                  <PaginationLink 
-                    isActive={page === p}
-                    onClick={() => setPage(p)}
-                  >
-                    {p}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={() => setPage(p => Math.min(data.meta.pages, p + 1))}
-                  disabled={page === data.meta.pages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
       </div>
 
       {/* Create Journal Dialog */}

@@ -1,6 +1,12 @@
+
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
-import { journalSchema, journalUpdateSchema, journalQuerySchema } from '../models/journal.model.js';
+import { 
+  journalSchema, 
+  journalUpdateSchema, 
+  journalQuerySchema,
+  toggleFavoriteSchema 
+} from '../models/journal.model.js';
 import { ApiError } from '../lib/errors.js';
 
 export class JournalController {
@@ -20,11 +26,14 @@ export class JournalController {
 
   // Get all journals with pagination and filtering
   static async getAll(req: Request, res: Response) {
-    const { page, limit, category, search } = journalQuerySchema.parse(req.query);
+    const { page, limit, category, search, favorite, mood, tags } = journalQuerySchema.parse(req.query);
     
     const where = {
       userId: req.user.id,
       ...(category && { category }),
+      ...(favorite !== undefined && { isFavorite: favorite }),
+      ...(mood && { mood }),
+      ...(tags && { tags: { hasSome: tags } }),
       ...(search && {
         OR: [
           { title: { contains: search, mode: 'insensitive' as const } },
@@ -95,6 +104,104 @@ export class JournalController {
     });
 
     res.json(updatedJournal);
+  }
+
+  // Toggle favorite status
+  static async toggleFavorite(req: Request, res: Response) {
+    const { isFavorite } = toggleFavoriteSchema.parse(req.body);
+    
+    const journal = await prisma.journal.findUnique({
+      where: { id: req.params.id },
+    });
+
+    if (!journal) {
+      throw new ApiError(404, 'Journal not found');
+    }
+
+    // Check if user owns the journal
+    if (journal.userId !== req.user.id) {
+      throw new ApiError(403, 'Unauthorized access to journal');
+    }
+
+    const updatedJournal = await prisma.journal.update({
+      where: { id: req.params.id },
+      data: { isFavorite },
+    });
+
+    res.json(updatedJournal);
+  }
+
+  // Get journal stats
+  static async getStats(req: Request, res: Response) {
+    const userId = req.user.id;
+
+    const [totalCount, favoriteCount, categoryStats, moodStats, recentActivity] = await Promise.all([
+      // Total count
+      prisma.journal.count({
+        where: { userId },
+      }),
+      
+      // Favorite count
+      prisma.journal.count({
+        where: { 
+          userId,
+          isFavorite: true,
+        },
+      }),
+      
+      // Categories with counts
+      prisma.journal.groupBy({
+        by: ['category'],
+        where: { 
+          userId,
+          category: { not: null },
+        },
+        _count: true,
+        orderBy: {
+          _count: {
+            id: 'desc',
+          },
+        },
+        take: 5,
+      }),
+      
+      // Mood distribution
+      prisma.journal.groupBy({
+        by: ['mood'],
+        where: { 
+          userId,
+          mood: { not: null },
+        },
+        _count: true,
+      }),
+      
+      // Recent activity (entries per day for the last 7 days)
+      prisma.$queryRaw`
+        SELECT 
+          DATE(j."createdAt") as date, 
+          COUNT(*) as count
+        FROM "Journal" j
+        WHERE 
+          j."userId" = ${userId}
+          AND j."createdAt" >= NOW() - INTERVAL '7 days'
+        GROUP BY DATE(j."createdAt")
+        ORDER BY date DESC
+      `,
+    ]);
+
+    res.json({
+      totalEntries: totalCount,
+      favoriteEntries: favoriteCount,
+      categories: categoryStats.map(cat => ({
+        name: cat.category || 'Uncategorized',
+        count: cat._count,
+      })),
+      moods: moodStats.map(mood => ({
+        name: mood.mood || 'Unspecified',
+        count: mood._count,
+      })),
+      recentActivity,
+    });
   }
 
   // Delete a journal

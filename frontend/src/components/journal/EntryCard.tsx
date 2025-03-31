@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Trash, Star } from 'lucide-react';
@@ -9,8 +9,9 @@ interface EntryCardProps {
   date: Date;
   content: string;
   mood?: string;
+  isFavorite?: boolean;
   onClick?: () => void;
-  onFavorite?: () => void;
+  onFavorite?: (isFavorite: boolean) => void;
   onDelete?: () => void;
   className?: string;
 }
@@ -19,13 +20,12 @@ const EntryCard = ({
   date, 
   content, 
   mood,
+  isFavorite = false,
   onClick,
   onFavorite,
   onDelete,
   className
 }: EntryCardProps) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-
   // Truncate content to ~100 characters and remove HTML tags
   const plainTextContent = content.replace(/<[^>]*>/g, '');
   const truncatedContent = plainTextContent.length > 100
@@ -46,8 +46,7 @@ const EntryCard = ({
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsFavorite(!isFavorite);
-    if (onFavorite) onFavorite();
+    if (onFavorite) onFavorite(!isFavorite);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -60,6 +59,7 @@ const EntryCard = ({
       onClick={onClick}
       className={cn(
         "glass-card p-4 cursor-pointer transition-all hover:shadow-raised hover:translate-y-[-2px] shadow-sm",
+        isFavorite && "border-l-4 border-l-yellow-400",
         className
       )}
     >
@@ -90,7 +90,7 @@ const EntryCard = ({
             "p-1.5 rounded-full transition-colors",
             isFavorite ? "text-yellow-500 hover:text-yellow-600" : "text-gray-400 hover:text-yellow-500"
           )}
-          aria-label="Favorite this entry"
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           <Star className="h-4 w-4" fill={isFavorite ? "currentColor" : "none"} />
         </button>
