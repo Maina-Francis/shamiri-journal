@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { PenLine, LayoutDashboard, Sparkles } from 'lucide-react';
+import { PenLine, Sparkles } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
 import Layout from '@/components/layout/Layout';
 import HeroImage from '@/components/home/HeroImage';
@@ -17,15 +17,15 @@ const Home = () => {
   
   return (
     <Layout className="flex flex-col items-center">
-      <div className="w-full max-w-7xl px-4 py-12 mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
-          <AnimatedContainer delay={100}>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
+      <div className="w-full max-w-7xl px-4 py-8 md:py-12 mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center mb-16 md:mb-20">
+          <AnimatedContainer delay={100} className="text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 md:mb-6">
               <span className="bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Shamiri</span>
               <span className="block text-foreground mt-2">Your personal journaling companion</span>
             </h1>
             
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-base md:text-lg text-muted-foreground mb-6 md:mb-8 max-w-xl">
               Document your thoughts, gain insights, and track your personal growth with AI-powered analysis and a beautiful minimalist interface.
             </p>
             
