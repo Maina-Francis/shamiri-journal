@@ -1,47 +1,65 @@
 
 import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { JournalEntry } from '@/api/journal.api';
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const formSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(255, 'Title must be less than 255 characters'),
+  title: z.string().min(1, 'Title is required'),
   content: z.string().min(1, 'Content is required'),
   category: z.string().optional(),
 });
-
-type FormValues = z.infer<typeof formSchema>;
-
-interface JournalFormProps {
-  initialData?: Partial<JournalEntry>;
-  onSubmit: (data: FormValues) => void;
-  isSubmitting: boolean;
-}
 
 const categories = [
   { value: 'personal', label: 'Personal' },
   { value: 'work', label: 'Work' },
   { value: 'health', label: 'Health' },
-  { value: 'goals', label: 'Goals' },
-  { value: 'gratitude', label: 'Gratitude' },
+  { value: 'travel', label: 'Travel' },
+  { value: 'family', label: 'Family' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'learning', label: 'Learning' },
+  { value: 'other', label: 'Other' },
 ];
 
-const JournalForm: React.FC<JournalFormProps> = ({ initialData, onSubmit, isSubmitting }) => {
-  const form = useForm<FormValues>({
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+    [{ 'list': 'bullet' }, { 'list': 'ordered' }],
+    ['clean']
+  ],
+};
+
+interface JournalFormProps {
+  initialData?: any;
+  onSubmit: (data: any) => void;
+  isSubmitting: boolean;
+}
+
+const JournalForm: React.FC<JournalFormProps> = ({
+  initialData,
+  onSubmit,
+  isSubmitting,
+}) => {
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || '',
@@ -52,7 +70,7 @@ const JournalForm: React.FC<JournalFormProps> = ({ initialData, onSubmit, isSubm
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="title"
@@ -60,19 +78,19 @@ const JournalForm: React.FC<JournalFormProps> = ({ initialData, onSubmit, isSubm
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Enter journal title" {...field} />
+                <Input placeholder="Enter a title for your journal entry" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        
         <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category (Optional)</FormLabel>
+              <FormLabel>Category</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
@@ -90,14 +108,11 @@ const JournalForm: React.FC<JournalFormProps> = ({ initialData, onSubmit, isSubm
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>
-                Categorize your journal entry to stay organized
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        
         <FormField
           control={form.control}
           name="content"
@@ -105,20 +120,24 @@ const JournalForm: React.FC<JournalFormProps> = ({ initialData, onSubmit, isSubm
             <FormItem>
               <FormLabel>Content</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Write your journal entry here..." 
-                  className="min-h-[200px]" 
-                  {...field}
+                <ReactQuill
+                  theme="snow"
+                  modules={modules}
+                  value={field.value}
+                  onChange={field.onChange}
+                  className="h-64 mb-12"
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="mt-12" />
             </FormItem>
           )}
         />
-
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : initialData?.id ? 'Update Journal' : 'Create Journal'}
-        </Button>
+        
+        <div className="flex justify-end space-x-2">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : initialData ? 'Save Changes' : 'Create Journal'}
+          </Button>
+        </div>
       </form>
     </Form>
   );

@@ -6,7 +6,6 @@ import {
   BarChart2, 
   Settings, 
   LogOut,
-  Home,
   LayoutDashboard
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -15,13 +14,13 @@ import {
   SidebarProvider, 
   Sidebar, 
   SidebarContent, 
+  SidebarFooter, 
   SidebarHeader, 
-  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupContent
+  SidebarMenuButton
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -41,12 +40,11 @@ const DashboardLayout = () => {
     navigate('/');
   };
 
+  const navigateToDashboard = () => {
+    navigate('/dashboard');
+  };
+
   const menuItems = [
-    { 
-      title: "Home", 
-      url: "/", 
-      icon: <Home className="h-4 w-4" /> 
-    },
     {
       title: "Dashboard",
       url: "/dashboard",
@@ -74,7 +72,10 @@ const DashboardLayout = () => {
       <div className="min-h-screen flex w-full">
         <Sidebar>
           <SidebarHeader className="flex flex-col items-center justify-center py-4">
-            <div className="flex items-center justify-center">
+            <div 
+              className="flex items-center justify-center cursor-pointer" 
+              onClick={navigateToDashboard}
+            >
               <span className="text-lg font-semibold bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">
                 Shamiri Journal
               </span>
