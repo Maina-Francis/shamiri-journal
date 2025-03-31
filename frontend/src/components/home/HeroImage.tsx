@@ -38,7 +38,7 @@ const HeroImage = () => {
             </div>
           ) : (
             <img 
-              src="/heroImage.jpg"
+              src="../../../public/heroImage.jpg"
               alt="Person journaling with AI assistance" 
               className={`w-full object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="eager"
