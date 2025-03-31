@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { User, IUser } from '../models/User.js'
+import { User, IUser } from '../models/user.model.js'
 
 export class AuthService {
   private static readonly JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'

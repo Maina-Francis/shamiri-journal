@@ -1,10 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import { errorHandler } from './middleware/errorHandler.js'
-import { notFound } from './middleware/notFound.js'
+import { errorHandler } from './middleware/errorHandler.middleware.js'
+import { notFound } from './middleware/notFound.middleware.js'
 import testRoutes from './routes/test.routes.js'
-import authRoutes from './routes/auth.js'
+import authRoutes from './routes/auth.routes.js'
 
 // Load environment variables
 dotenv.config()

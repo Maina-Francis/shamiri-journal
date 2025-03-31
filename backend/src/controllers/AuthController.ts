@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AuthService } from '../services/AuthService.js'
-import { IUser } from '../models/User.js'
+import { IUser } from '../models/user.model.js'
 
 export class AuthController {
   static async register(req: Request, res: Response): Promise<void> {

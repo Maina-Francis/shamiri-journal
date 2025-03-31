@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { validate } from '../middleware/validate.js'
+import { validate } from '../middleware/validate.middleware.js'
 import { testController } from '../controllers/test.controller.js'
 
 const router = Router()
