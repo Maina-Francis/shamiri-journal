@@ -18,6 +18,7 @@
     "@vitejs/plugin-react-swc": "^3.8.1",
     "autoprefixer": "^10.4.21",
     "date-fns": "^3.6.0",
+    "lucide-react": "^0.486.0",
     "postcss": "^8.5.3",
     "prisma": "^5.10.2",
     "react-quill": "^2.0.0"
