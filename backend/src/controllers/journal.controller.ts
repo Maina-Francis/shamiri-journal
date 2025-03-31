@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 import { journalSchema, journalUpdateSchema, journalQuerySchema } from '../models/journal.model.js';
-import { ApiError } from '../lib/errors';
+import { ApiError } from '../lib/errors.js';
 
 export class JournalController {
   // Create a new journal
@@ -27,8 +27,8 @@ export class JournalController {
       ...(category && { category }),
       ...(search && {
         OR: [
-          { title: { contains: search, mode: 'insensitive' } },
-          { content: { contains: search, mode: 'insensitive' } },
+          { title: { contains: search, mode: 'insensitive' as const } },
+          { content: { contains: search, mode: 'insensitive' as const } },
         ],
       }),
     };
@@ -118,4 +118,4 @@ export class JournalController {
 
     res.status(204).send();
   }
-} 
+}
