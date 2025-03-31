@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Sparkles, Brain, PenLine, Lightbulb } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
@@ -39,7 +38,7 @@ const HeroImage = () => {
             </div>
           ) : (
             <img 
-              src="/lovable-uploads/5074ebf1-5431-481b-9ca0-0adc26e090f2.png"
+              src="/heroImage.jpg"
               alt="Person journaling with AI assistance" 
               className={`w-full object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="eager"
