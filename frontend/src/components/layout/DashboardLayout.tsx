@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import { Sidebar, SidebarContent, SidebarItem } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarMenuItem, SidebarMenu, SidebarMenuButton } from '@/components/ui/sidebar';
 import Header from './Header';
 
 const DashboardLayout = () => {
@@ -46,19 +46,26 @@ const DashboardLayout = () => {
     <div className="flex min-h-screen">
       <Sidebar className="hidden md:flex w-64 border-r">
         <SidebarContent>
-          {sidebarItems.map((item) => (
-            <SidebarItem 
-              key={item.title}
-              icon={item.icon}
-              title={item.title}
-              onClick={() => navigate(item.href)}
-            />
-          ))}
-          <SidebarItem 
-            icon={<LogOut className="h-5 w-5" />}
-            title="Logout"
-            onClick={handleLogout}
-          />
+          <SidebarMenu>
+            {sidebarItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton 
+                  icon={item.icon}
+                  onClick={() => navigate(item.href)}
+                >
+                  {item.title}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+            <SidebarMenuItem>
+              <SidebarMenuButton 
+                icon={<LogOut className="h-5 w-5" />}
+                onClick={handleLogout}
+              >
+                Logout
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarContent>
       </Sidebar>
       
