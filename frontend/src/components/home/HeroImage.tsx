@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Sparkles, Brain, PenLine, Lightbulb } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
@@ -38,9 +39,9 @@ const HeroImage = () => {
             </div>
           ) : (
             <img 
-              src="../../../public/heroImage.jpg"
+              src="/heroImage.jpg"
               alt="Person journaling with AI assistance" 
-              className={`w-full object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`w-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="eager"
               onLoad={handleImageLoad}
               onError={handleImageError}
@@ -59,7 +60,7 @@ const HeroImage = () => {
       </div>
       
       {/* Mood detected bubble */}
-      <AnimatedContainer delay={500} className="absolute -right-4 sm:-right-12 top-6 animate-float md:block">
+      <AnimatedContainer delay={500} className="absolute -right-4 sm:-right-12 top-6 animate-float hidden md:block">
         <div className="glass-card p-3 shadow-lg rounded-lg max-w-[150px]">
           <div className="flex items-center mb-2">
             <Brain className="h-4 w-4 text-accent mr-1" />
@@ -70,7 +71,7 @@ const HeroImage = () => {
       </AnimatedContainer>
       
       {/* Floating AI insights bubbles */}
-      <AnimatedContainer delay={700} className="absolute -right-4 sm:-right-16 top-1/3 animate-float md:block">
+      <AnimatedContainer delay={700} className="absolute -right-4 sm:-right-16 top-1/3 animate-float hidden md:block">
         <div className="glass-card p-3 shadow-lg rounded-lg max-w-[160px]">
           <div className="flex items-center mb-2">
             <Lightbulb className="h-4 w-4 text-accent mr-1" />
@@ -80,7 +81,7 @@ const HeroImage = () => {
         </div>
       </AnimatedContainer>
       
-      <AnimatedContainer delay={900} className="absolute -left-4 sm:-left-16 bottom-1/4 animate-float-slow md:block">
+      <AnimatedContainer delay={900} className="absolute -left-4 sm:-left-16 bottom-1/4 animate-float-slow hidden md:block">
         <div className="glass-card p-3 shadow-lg rounded-lg max-w-[160px]">
           <div className="flex items-center mb-2">
             <Sparkles className="h-4 w-4 text-accent mr-1" />
@@ -89,6 +90,29 @@ const HeroImage = () => {
           <p className="text-xs text-gray-600">Try journaling about your achievements today</p>
         </div>
       </AnimatedContainer>
+      
+      {/* Mobile version of the floating bubbles (stacked vertically) */}
+      <div className="md:hidden absolute -right-2 top-6 space-y-2">
+        <AnimatedContainer delay={500} className="animate-float">
+          <div className="glass-card p-2 shadow-lg rounded-lg max-w-[120px]">
+            <div className="flex items-center mb-1">
+              <Brain className="h-3 w-3 text-accent mr-1" />
+              <span className="text-xs font-medium">Mood detected</span>
+            </div>
+            <p className="text-xs text-gray-600">Optimistic</p>
+          </div>
+        </AnimatedContainer>
+        
+        <AnimatedContainer delay={700} className="animate-float">
+          <div className="glass-card p-2 shadow-lg rounded-lg max-w-[120px]">
+            <div className="flex items-center mb-1">
+              <Lightbulb className="h-3 w-3 text-accent mr-1" />
+              <span className="text-xs font-medium">AI Insight</span>
+            </div>
+            <p className="text-xs text-gray-600">Morning writing improves mood</p>
+          </div>
+        </AnimatedContainer>
+      </div>
       
       {/* Background blobs */}
       <div className="absolute -z-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl top-20 -left-20"></div>
