@@ -1,3 +1,4 @@
+
 import { Request, Response, NextFunction } from 'express'
 
 interface CustomError extends Error {
@@ -12,6 +13,8 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  console.error('Error caught by middleware:', err);
+  
   let statusCode = err.statusCode || 500
   let message = err.message || 'Internal Server Error'
 
@@ -32,4 +35,4 @@ export const errorHandler = (
     message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   })
-} 
+}

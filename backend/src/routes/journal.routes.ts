@@ -1,8 +1,8 @@
 
 import { Router } from 'express';
-import { JournalController } from '../controllers/journal.controller';
-import { authenticate } from '../middleware/auth';
-import { asyncHandler } from '../lib/async-handler';
+import { JournalController } from '../controllers/journal.controller.js';
+import { authenticate } from '../middleware/auth.middleware.js';
+import { asyncHandler } from '../lib/async-handler.js';
 
 const router = Router();
 

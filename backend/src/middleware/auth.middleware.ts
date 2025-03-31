@@ -1,21 +1,43 @@
+
 import { Request, Response, NextFunction } from 'express'
-import { AuthService } from '../services/AuthService.js'
+import jwt from 'jsonwebtoken'
+import { prisma } from '../lib/prisma.js'
+import { ApiError } from '../lib/errors.js'
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const token = req.headers.authorization?.split(' ')[1]
-    if (!token) {
-      throw new Error('No token provided')
+    const authHeader = req.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new ApiError(401, 'No token provided or invalid token format')
     }
 
-    const user = await AuthService.getCurrentUser(token)
-    req.user = user
-    next()
+    const token = authHeader.split(' ')[1]
+    if (!token) {
+      throw new ApiError(401, 'No token provided')
+    }
+
+    try {
+      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret')
+      
+      // Get user from database to ensure they exist
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.id },
+        select: { id: true, email: true, name: true, role: true }
+      })
+      
+      if (!user) {
+        throw new ApiError(401, 'User not found')
+      }
+      
+      // Attach user to request object
+      req.user = user
+      next()
+    } catch (err) {
+      console.error('JWT verification error:', err)
+      throw new ApiError(401, 'Invalid or expired token')
+    }
   } catch (error) {
-    res.status(401).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Authentication failed',
-    })
+    next(error)
   }
 }
 
@@ -26,4 +48,4 @@ declare global {
       user?: any
     }
   }
-} 
+}
