@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
-import { Sparkles, Brain, PenLine } from 'lucide-react';
+import { Sparkles, Brain, PenLine, Lightbulb } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const HeroImage = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -17,9 +19,9 @@ const HeroImage = () => {
   };
 
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full max-w-xl mx-auto">
       {/* Main image container with animation */}
-      <div className="relative rounded-xl overflow-hidden shadow-xl border border-gray-100 bg-white/50 backdrop-blur-sm">
+      <div className="relative w-full rounded-xl overflow-hidden shadow-xl border border-gray-100 bg-white/50 backdrop-blur-sm">
         {/* Hero image */}
         <div className="relative w-full overflow-hidden rounded-lg">
           {!imageLoaded && !imageError && (
@@ -41,16 +43,16 @@ const HeroImage = () => {
               // src="/lovable-uploads/de729820-0185-4530-bffb-2e166a7c569b.png"
               src="../../../public/heroImage.jpg"
               alt="Person journaling with AI assistance" 
-              className={`w-full h-auto object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`w-full object-cover transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="eager"
               onLoad={handleImageLoad}
               onError={handleImageError}
-              style={{ minHeight: '240px', maxHeight: '360px' }}
+              style={{ height: isMobile ? '280px' : '360px', objectFit: 'cover', objectPosition: 'center' }}
             />
           )}
           
           {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
         </div>
         
         {/* Caption overlay */}
@@ -59,24 +61,35 @@ const HeroImage = () => {
         </div>
       </div>
       
-      {/* Floating AI insights bubbles */}
-      <AnimatedContainer delay={700} className="absolute -right-12 top-1/4 animate-float md:block hidden">
+      {/* Mood detected bubble */}
+      <AnimatedContainer delay={500} className="absolute -right-4 sm:-right-12 top-6 animate-float md:block">
         <div className="glass-card p-3 shadow-lg rounded-lg max-w-[150px]">
           <div className="flex items-center mb-2">
             <Brain className="h-4 w-4 text-accent mr-1" />
+            <span className="text-xs font-medium">Mood detected</span>
+          </div>
+          <p className="text-xs text-gray-600">Optimistic</p>
+        </div>
+      </AnimatedContainer>
+      
+      {/* Floating AI insights bubbles */}
+      <AnimatedContainer delay={700} className="absolute -right-4 sm:-right-16 top-1/3 animate-float md:block">
+        <div className="glass-card p-3 shadow-lg rounded-lg max-w-[160px]">
+          <div className="flex items-center mb-2">
+            <Lightbulb className="h-4 w-4 text-accent mr-1" />
             <span className="text-xs font-medium">AI Insight</span>
           </div>
           <p className="text-xs text-gray-600">Your mood improves when you write in the morning</p>
         </div>
       </AnimatedContainer>
       
-      <AnimatedContainer delay={900} className="absolute -left-16 bottom-1/4 animate-float-slow md:block hidden">
-        <div className="glass-card p-3 shadow-lg rounded-lg max-w-[150px]">
+      <AnimatedContainer delay={900} className="absolute -left-4 sm:-left-16 bottom-1/4 animate-float-slow md:block">
+        <div className="glass-card p-3 shadow-lg rounded-lg max-w-[160px]">
           <div className="flex items-center mb-2">
-            <PenLine className="h-4 w-4 text-accent mr-1" />
-            <span className="text-xs font-medium">Pattern Found</span>
+            <Sparkles className="h-4 w-4 text-accent mr-1" />
+            <span className="text-xs font-medium">AI Assistant</span>
           </div>
-          <p className="text-xs text-gray-600">You mention exercise more on positive days</p>
+          <p className="text-xs text-gray-600">Try journaling about your achievements today</p>
         </div>
       </AnimatedContainer>
       
