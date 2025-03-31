@@ -28,7 +28,7 @@ export class JournalController {
   static async getAll(req: Request, res: Response) {
     const { page, limit, category, search, favorite, mood, tags } = journalQuerySchema.parse(req.query);
     
-    const where = {
+    const where: any = {
       userId: req.user.id,
       ...(category && { category }),
       ...(favorite !== undefined && { isFavorite: favorite }),
@@ -150,41 +150,41 @@ export class JournalController {
       }),
       
       // Categories with counts
-      prisma.journal.groupBy({
-        by: ['category'],
-        where: { 
-          userId,
-          category: { not: null },
-        },
-        _count: true,
-        orderBy: {
-          _count: {
-            id: 'desc',
-          },
-        },
-        take: 5,
-      }),
+      prisma.$queryRaw`
+        SELECT 
+          "category",
+          COUNT(*) as count
+        FROM "Journal"
+        WHERE 
+          "userId" = ${userId}
+          AND "category" IS NOT NULL
+        GROUP BY "category"
+        ORDER BY count DESC
+        LIMIT 5
+      `,
       
       // Mood distribution
-      prisma.journal.groupBy({
-        by: ['mood'],
-        where: { 
-          userId,
-          mood: { not: null },
-        },
-        _count: true,
-      }),
+      prisma.$queryRaw`
+        SELECT 
+          "mood",
+          COUNT(*) as count
+        FROM "Journal"
+        WHERE 
+          "userId" = ${userId}
+          AND "mood" IS NOT NULL
+        GROUP BY "mood"
+      `,
       
       // Recent activity (entries per day for the last 7 days)
       prisma.$queryRaw`
         SELECT 
-          DATE(j."createdAt") as date, 
+          DATE("createdAt") as date, 
           COUNT(*) as count
-        FROM "Journal" j
+        FROM "Journal"
         WHERE 
-          j."userId" = ${userId}
-          AND j."createdAt" >= NOW() - INTERVAL '7 days'
-        GROUP BY DATE(j."createdAt")
+          "userId" = ${userId}
+          AND "createdAt" >= NOW() - INTERVAL '7 days'
+        GROUP BY DATE("createdAt")
         ORDER BY date DESC
       `,
     ]);
@@ -192,14 +192,8 @@ export class JournalController {
     res.json({
       totalEntries: totalCount,
       favoriteEntries: favoriteCount,
-      categories: categoryStats.map(cat => ({
-        name: cat.category || 'Uncategorized',
-        count: cat._count,
-      })),
-      moods: moodStats.map(mood => ({
-        name: mood.mood || 'Unspecified',
-        count: mood._count,
-      })),
+      categories: categoryStats,
+      moods: moodStats,
       recentActivity,
     });
   }
