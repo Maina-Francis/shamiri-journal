@@ -19,7 +19,7 @@
     "autoprefixer": "^10.4.21",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.486.0",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^3.3.2",
     "postcss": "^8.5.3",
     "prisma": "^5.10.2",
     "react-quill": "^2.0.0"

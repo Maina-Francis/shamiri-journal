@@ -80,19 +80,19 @@ const Editor = ({ date = new Date(), initialContent = '', onSave }: EditorProps)
 
   return (
     <AnimatedContainer 
-      className="glass-card p-6 max-w-3xl w-full mx-auto shadow-md hover:shadow-lg transition-shadow" 
+      className="glass-card p-6 max-w-3xl w-full mx-auto shadow-md hover:shadow-lg transition-shadow border border-purple-100 dark:border-purple-900/40 bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-950/30" 
       animation="slide-up"
     >
       <div className="flex items-center justify-between mb-4">
         <div>
-          <span className="text-xs uppercase tracking-wide text-muted-foreground">
+          <span className="text-xs uppercase tracking-wide text-purple-500 dark:text-purple-400 font-semibold">
             {format(date, 'EEEE')}
           </span>
-          <h2 className="text-2xl font-medium">{format(date, 'MMMM d, yyyy')}</h2>
+          <h2 className="text-2xl font-medium bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">{format(date, 'MMMM d, yyyy')}</h2>
         </div>
       </div>
       
-      <Separator className="my-4" />
+      <Separator className="my-4 bg-gradient-to-r from-purple-200 to-blue-200 dark:from-purple-800/30 dark:to-blue-800/30" />
       
       <div className="min-h-[300px]">
         <ReactQuill 
@@ -102,11 +102,11 @@ const Editor = ({ date = new Date(), initialContent = '', onSave }: EditorProps)
           modules={modules}
           formats={formats}
           placeholder="What's on your mind today?"
-          className="h-[250px] mb-12"
+          className="h-[250px] mb-12 bg-white/80 dark:bg-gray-900/80 rounded-md"
         />
       </div>
       
-      <div className="flex items-center justify-between mt-6 pt-2 border-t border-gray-100">
+      <div className="flex items-center justify-between mt-6 pt-2 border-t border-purple-100 dark:border-purple-800/30">
         <div className="text-xs text-muted-foreground">
           {wordCount} {wordCount === 1 ? 'word' : 'words'}
           {lastSaved && (
@@ -119,7 +119,7 @@ const Editor = ({ date = new Date(), initialContent = '', onSave }: EditorProps)
         <Button
           onClick={handleSave}
           disabled={isSaving || !content.trim()}
-          className="flex items-center gap-2 transition-all"
+          className="flex items-center gap-2 transition-all bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
           size="sm"
         >
           <Save className="h-4 w-4" />

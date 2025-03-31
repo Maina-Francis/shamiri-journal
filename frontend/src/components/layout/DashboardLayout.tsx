@@ -1,144 +1,74 @@
 
-import React from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { 
-  PenLine, 
+  BookOpen, 
   BarChart2, 
   Settings, 
-  LogOut,
-  LayoutDashboard
+  LogOut
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { 
-  SidebarProvider, 
-  Sidebar, 
-  SidebarContent, 
-  SidebarFooter, 
-  SidebarHeader, 
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton
-} from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/hooks/use-toast';
+import { Sidebar, SidebarContent, SidebarItem } from '@/components/ui/sidebar';
+import Header from './Header';
 
 const DashboardLayout = () => {
-  const { user, logout } = useAuth();
-  const { toast } = useToast();
+  const { logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleLogout = () => {
-    logout();
+  
+  const handleLogout = async () => {
+    await logout();
     toast({
-      title: 'Logged out',
-      description: 'You have been logged out successfully'
+      title: "Logged out",
+      description: "You have been successfully logged out.",
     });
     navigate('/');
   };
-
-  const navigateToDashboard = () => {
-    navigate('/dashboard');
-  };
-
-  const menuItems = [
+  
+  const sidebarItems = [
     {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: <LayoutDashboard className="h-4 w-4" />
+      title: 'Journal',
+      icon: <BookOpen className="h-5 w-5" />,
+      href: '/journal',
     },
-    { 
-      title: "Journal", 
-      url: "/journal", 
-      icon: <PenLine className="h-4 w-4" /> 
+    {
+      title: 'Insights',
+      icon: <BarChart2 className="h-5 w-5" />,
+      href: '/insights',
     },
-    { 
-      title: "Insights", 
-      url: "/insights", 
-      icon: <BarChart2 className="h-4 w-4" /> 
+    {
+      title: 'Settings',
+      icon: <Settings className="h-5 w-5" />,
+      href: '/settings',
     },
-    { 
-      title: "Settings", 
-      url: "/settings", 
-      icon: <Settings className="h-4 w-4" /> 
-    }
   ];
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <Sidebar>
-          <SidebarHeader className="flex flex-col items-center justify-center py-4">
-            <div 
-              className="flex items-center justify-center cursor-pointer" 
-              onClick={navigateToDashboard}
-            >
-              <span className="text-lg font-semibold bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">
-                Shamiri Journal
-              </span>
-            </div>
-          </SidebarHeader>
-          
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={location.pathname === item.url}
-                        tooltip={item.title}
-                      >
-                        <a href={item.url} className="flex items-center gap-2">
-                          {item.icon}
-                          <span>{item.title}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          
-          <SidebarFooter className="p-4 border-t">
-            {user && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="" alt={user.name} />
-                    <AvatarFallback>
-                      {user.name.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-sm">
-                    <p className="font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground truncate w-32">{user.email}</p>
-                  </div>
-                </div>
-                
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleLogout}
-                  className="h-8 w-8"
-                >
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </SidebarFooter>
-        </Sidebar>
-        
-        <div className="flex-1 p-6 pt-6">
+    <div className="flex min-h-screen">
+      <Sidebar className="hidden md:flex w-64 border-r">
+        <SidebarContent>
+          {sidebarItems.map((item) => (
+            <SidebarItem 
+              key={item.title}
+              icon={item.icon}
+              title={item.title}
+              onClick={() => navigate(item.href)}
+            />
+          ))}
+          <SidebarItem 
+            icon={<LogOut className="h-5 w-5" />}
+            title="Logout"
+            onClick={handleLogout}
+          />
+        </SidebarContent>
+      </Sidebar>
+      
+      <div className="flex-1 flex flex-col">
+        <Header />
+        <main className="flex-1 overflow-auto pt-16">
           <Outlet />
-        </div>
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 

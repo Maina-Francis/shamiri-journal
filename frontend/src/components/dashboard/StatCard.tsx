@@ -10,11 +10,11 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: "border-border",
-        primary: "border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-950/30",
-        success: "border-l-4 border-l-green-500 bg-green-50 dark:bg-green-950/30",
-        warning: "border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/30",
-        danger: "border-l-4 border-l-red-500 bg-red-50 dark:bg-red-950/30",
-        info: "border-l-4 border-l-purple-500 bg-purple-50 dark:bg-purple-950/30",
+        primary: "border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20",
+        success: "border-l-4 border-l-green-500 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20",
+        warning: "border-l-4 border-l-yellow-500 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-950/30 dark:to-yellow-900/20",
+        danger: "border-l-4 border-l-red-500 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/30 dark:to-red-900/20",
+        info: "border-l-4 border-l-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/20",
       }
     },
     defaultVariants: {
@@ -47,11 +47,11 @@ const StatCard: React.FC<StatCardProps> = ({
   variant = 'default',
 }) => {
   return (
-    <Card className={cn(cardVariants({ variant }), className)}>
+    <Card className={cn(cardVariants({ variant }), className, "overflow-hidden")}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon && (
-          <div className="h-8 w-8 rounded-full bg-muted/50 p-1.5 flex items-center justify-center text-muted-foreground">
+          <div className="h-9 w-9 rounded-full bg-muted/30 p-1.5 flex items-center justify-center text-muted-foreground">
             {icon}
           </div>
         )}
@@ -65,7 +65,7 @@ const StatCard: React.FC<StatCardProps> = ({
           <div className="flex items-center mt-2 text-xs">
             <span
               className={cn(
-                "flex items-center",
+                "flex items-center font-semibold",
                 trend.isPositive ? "text-emerald-500" : "text-rose-500"
               )}
             >

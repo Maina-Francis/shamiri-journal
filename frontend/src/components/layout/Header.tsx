@@ -34,7 +34,7 @@ const Header = () => {
               onClick={handleLogoClick}
               className="flex items-center space-x-2 cursor-pointer"
             >
-              <span className="text-lg font-semibold bg-gradient-to-r from-accent to-blue-700 bg-clip-text text-transparent">Shamiri Journal</span>
+              <span className="text-lg font-semibold bg-gradient-to-r from-purple-500 to-blue-600 bg-clip-text text-transparent">Shamiri Journal</span>
             </div>
           </div>
           

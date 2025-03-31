@@ -96,7 +96,7 @@ const JournalForm: React.FC<JournalFormProps> = ({
                 defaultValue={field.value}
               >
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-background/50 backdrop-blur-sm">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                 </FormControl>
@@ -125,7 +125,7 @@ const JournalForm: React.FC<JournalFormProps> = ({
                   modules={modules}
                   value={field.value}
                   onChange={field.onChange}
-                  className="h-64 mb-12"
+                  className="bg-white/80 rounded-md h-64 mb-12"
                 />
               </FormControl>
               <FormMessage className="mt-12" />
@@ -134,7 +134,11 @@ const JournalForm: React.FC<JournalFormProps> = ({
         />
         
         <div className="flex justify-end space-x-2">
-          <Button type="submit" disabled={isSubmitting}>
+          <Button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
+          >
             {isSubmitting ? 'Saving...' : initialData ? 'Save Changes' : 'Create Journal'}
           </Button>
         </div>
