@@ -1,16 +1,16 @@
 
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { 
   PenLine, 
   BarChart2, 
   Settings, 
   LogOut,
-  Home
+  Home,
+  LayoutDashboard
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -30,6 +30,7 @@ const DashboardLayout = () => {
   const { user, logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -45,6 +46,11 @@ const DashboardLayout = () => {
       title: "Home", 
       url: "/", 
       icon: <Home className="h-4 w-4" /> 
+    },
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: <LayoutDashboard className="h-4 w-4" />
     },
     { 
       title: "Journal", 
@@ -83,7 +89,7 @@ const DashboardLayout = () => {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                         asChild
-                        isActive={window.location.pathname === item.url}
+                        isActive={location.pathname === item.url}
                         tooltip={item.title}
                       >
                         <a href={item.url} className="flex items-center gap-2">
