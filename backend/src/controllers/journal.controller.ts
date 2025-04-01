@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 import { 
@@ -28,7 +27,7 @@ export class JournalController {
           userId: req.user.id,
           mood,
           tags,
-        } as any,
+        },
       });
 
       res.status(201).json(journal);
@@ -245,12 +244,28 @@ export class JournalController {
       // Get AI insights
       const insights = await AIService.generateInsights(userId);
 
+      // Process raw query results to handle BigInt values
+      const processedCategoryStats = Array.isArray(categoryStats) ? categoryStats.map(stat => ({
+        name: stat.category,
+        count: Number(stat.count)
+      })) : [];
+
+      const processedMoodStats = Array.isArray(moodStats) ? moodStats.map(stat => ({
+        name: stat.mood,
+        count: Number(stat.count)
+      })) : [];
+
+      const processedRecentActivity = Array.isArray(recentActivity) ? recentActivity.map(day => ({
+        date: day.date.toISOString().split('T')[0],
+        count: Number(day.count)
+      })) : [];
+
       res.json({
         totalEntries: totalCount,
         favoriteEntries: favoriteCount,
-        categories: categoryStats,
-        moods: moodStats,
-        recentActivity,
+        categories: processedCategoryStats,
+        moods: processedMoodStats,
+        recentActivity: processedRecentActivity,
         insights
       });
     } catch (error) {

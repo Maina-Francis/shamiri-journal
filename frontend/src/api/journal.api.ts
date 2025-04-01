@@ -42,7 +42,7 @@ export interface JournalStats {
 }
 
 // Create a new journal entry
-export const createJournal = async (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt' | 'isFavorite' | 'tags' | 'aiInsights'>): Promise<JournalEntry> => {
+export const createJournal = async (data: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt' | 'isFavorite' | 'tags' | 'aiInsights' | 'userId'>): Promise<JournalEntry> => {
   const response = await fetch(`${API_URL}/journals`, {
     method: 'POST',
     headers: {

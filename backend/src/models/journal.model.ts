@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 // Zod schema for validation
@@ -6,7 +5,7 @@ export const journalSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   content: z.string().min(1, 'Content is required'),
   category: z.string().optional(),
-  userId: z.string().uuid(),
+  userId: z.string().uuid().optional(),
   isFavorite: z.boolean().optional().default(false),
   mood: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
