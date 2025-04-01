@@ -7,6 +7,8 @@ A modern journaling application with mood tracking, AI analysis, and personal in
 
 Shamiri Journal is a full-stack web application designed to help users track their thoughts, feelings, and daily experiences through journaling. The app leverages AI to provide personalized insights, mood analysis, and topic tracking to help users gain a deeper understanding of their emotional patterns and well-being.
 
+![Image](https://github.com/user-attachments/assets/956cb0da-75ca-4a9b-80c1-7b911817a01b)
+
 ## Project Structure
 
 This project is structured in two main directories:
