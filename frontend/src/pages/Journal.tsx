@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import Editor from '@/components/journal/Editor';
 import Calendar from '@/components/journal/Calendar';
@@ -13,7 +13,8 @@ import {
   createJournal, 
   updateJournal, 
   toggleJournalFavorite, 
-  deleteJournal 
+  deleteJournal,
+  JournalEntry 
 } from '@/api/journal.api';
 import { Loader2 } from 'lucide-react';
 
@@ -39,7 +40,7 @@ const Journal = () => {
   }, [entries]);
 
   // Calculate user's journal streak
-  const calculateStreak = (journalEntries) => {
+  const calculateStreak = (journalEntries: JournalEntry[]) => {
     if (!journalEntries.length) {
       setStreak(0);
       return;
