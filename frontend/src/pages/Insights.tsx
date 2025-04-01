@@ -69,7 +69,7 @@ const Insights = () => {
       return {
         name: displayName,
         value: Math.round((count / total) * 100),
-        color: getMoodColor(name),
+      color: getMoodColor(name),
       };
     });
   };
@@ -220,13 +220,13 @@ const Insights = () => {
                   <CardContent>
                     {moodData.length > 0 ? (
                       <div className="pt-2 flex flex-col items-center">
-                        <PieChart 
-                          data={moodData} 
-                          index="name" 
-                          categories={['value']}
-                          valueFormatter={(value) => `${value}%`}
+                      <PieChart 
+                        data={moodData} 
+                        index="name" 
+                        categories={['value']}
+                        valueFormatter={(value) => `${value}%`}
                           className="h-[250px]"
-                        />
+                      />
                         <p className="text-xs text-center text-muted-foreground mt-2">
                           Percentage distribution of your moods across journal entries
                         </p>
@@ -252,15 +252,15 @@ const Insights = () => {
                   <CardContent>
                     {activityData.length > 0 ? (
                       <div className="h-[250px] overflow-hidden">
-                        <BarChart 
-                          data={activityData}
-                          index="name"
-                          categories={['entries']}
-                          colors={['blue']}
-                          valueFormatter={(value) => `${value} entries`}
+                      <BarChart 
+                        data={activityData}
+                        index="name"
+                        categories={['entries']}
+                        colors={['blue']}
+                        valueFormatter={(value) => `${value} entries`}
                           className="h-[250px] w-full"
                           yAxisWidth={30}
-                        />
+                      />
                       </div>
                     ) : (
                       <div className="h-[250px] flex items-center justify-center text-muted-foreground">
@@ -340,12 +340,12 @@ const Insights = () => {
                       </div>
                       
                       {statsData.insights.topTopics.length > 0 && (
-                        <div className="glass p-4 rounded-lg">
+                      <div className="glass p-4 rounded-lg">
                           <h3 className="font-medium mb-2">Your Top Themes</h3>
-                          <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                             You frequently write about: {statsData.insights.topTopics.join(', ')}
-                          </p>
-                        </div>
+                        </p>
+                      </div>
                       )}
                       
                       <div className="glass p-4 rounded-lg">
@@ -398,15 +398,15 @@ const Insights = () => {
                 <CardContent>
                   {journalEntries.length > 7 ? (
                     <div className="h-80 overflow-hidden">
-                      <LineChart 
-                        data={generateMoodOverTime(journalEntries)}
-                        index="date"
-                        categories={['moodScore']}
-                        colors={['blue']}
-                        valueFormatter={(value) => `${value}`}
-                        yAxisWidth={30}
+                    <LineChart 
+                      data={generateMoodOverTime(journalEntries)}
+                      index="date"
+                      categories={['moodScore']}
+                      colors={['blue']}
+                      valueFormatter={(value) => `${value}`}
+                      yAxisWidth={30}
                         className="h-80 w-full"
-                      />
+                    />
                     </div>
                   ) : (
                     <div className="h-80 flex flex-col items-center justify-center text-center p-6">
