@@ -4,7 +4,8 @@ import {
   BookOpen, 
   BarChart2, 
   Settings, 
-  LogOut
+  LogOut,
+  LayoutDashboard
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -34,7 +35,7 @@ const DashboardLayout = () => {
   const sidebarItems = [
     {
       title: 'Dashboard',
-      icon: <BookOpen className="h-5 w-5" />,
+      icon: <LayoutDashboard className="h-5 w-5" />,
       href: '/dashboard',
     },
     {
