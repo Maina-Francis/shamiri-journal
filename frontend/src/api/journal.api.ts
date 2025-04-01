@@ -1,4 +1,3 @@
-
 import { API_URL } from '@/config/constants';
 
 export interface JournalEntry {
@@ -175,4 +174,21 @@ export const deleteJournal = async (id: string): Promise<void> => {
     const error = await response.json();
     throw new Error(error.message || 'Failed to delete journal entry');
   }
+};
+
+// Get all journal entries (without pagination) for insights page
+export const getAllJournalEntries = async (): Promise<JournalEntry[]> => {
+  const response = await fetch(`${API_URL}/journals/all`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+
+  if (!response.ok) {
+    const allJournals = await getJournals({ limit: 100 });
+    return allJournals.data;
+  }
+
+  return response.json();
 };
