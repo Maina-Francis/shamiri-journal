@@ -1,12 +1,16 @@
-
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  BookOpen, 
-  BarChart2, 
+  BookOpenText, 
+  LineChart, 
   Settings, 
   LogOut,
   LayoutDashboard,
-  Home
+  Home,
+  PieChart,
+  BarChart3,
+  NotebookPen,
+  Lightbulb,
+  Cog
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -21,7 +25,7 @@ import {
 import Header from './Header';
 
 const DashboardLayout = () => {
-  const { logout } = useAuth();
+  const { logout } = useAuth()!;
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -41,22 +45,22 @@ const DashboardLayout = () => {
   const sidebarItems = [
     {
       title: 'Dashboard',
-      icon: <LayoutDashboard className="h-5 w-5" />,
+      icon: <LayoutDashboard className="h-5 w-5 text-primary" />,
       href: '/dashboard',
     },
     {
       title: 'Journal',
-      icon: <BookOpen className="h-5 w-5" />,
+      icon: <NotebookPen className="h-5 w-5 text-pink-500" />,
       href: '/journal',
     },
     {
       title: 'Insights',
-      icon: <BarChart2 className="h-5 w-5" />,
+      icon: <LineChart className="h-5 w-5 text-indigo-500" />,
       href: '/insights',
     },
     {
       title: 'Settings',
-      icon: <Settings className="h-5 w-5" />,
+      icon: <Cog className="h-5 w-5 text-gray-500" />,
       href: '/settings',
     },
   ];
@@ -78,7 +82,9 @@ const DashboardLayout = () => {
                       icon={item.icon}
                       onClick={() => navigate(item.href)}
                       isActive={isActiveRoute(item.href)}
-                      className={isActiveRoute(item.href) ? "bg-accent/10 text-accent" : ""}
+                      className={isActiveRoute(item.href) 
+                        ? "bg-accent/10 text-accent font-medium" 
+                        : "hover:bg-muted/50 transition-colors duration-200"}
                     >
                       {item.title}
                     </SidebarMenuButton>
@@ -86,8 +92,9 @@ const DashboardLayout = () => {
                 ))}
                 <SidebarMenuItem>
                   <SidebarMenuButton 
-                    icon={<LogOut className="h-5 w-5" />}
+                    icon={<LogOut className="h-5 w-5 text-red-500" />}
                     onClick={handleLogout}
+                    className="hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
                   >
                     Logout
                   </SidebarMenuButton>

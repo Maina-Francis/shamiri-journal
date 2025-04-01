@@ -65,7 +65,7 @@ const Dashboard = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['journals', queryParams],
+    queryKey: ['journals', activeTab, page, limit, debouncedSearchTerm],
     queryFn: () => getJournals(queryParams),
   });
 
@@ -120,15 +120,17 @@ const Dashboard = () => {
     mutationFn: ({ id, isFavorite }: { id: string; isFavorite: boolean }) => 
       toggleJournalFavorite(id, isFavorite),
     onSuccess: (data) => {
+      // Invalidate all journal-related queries to ensure consistent data
+      queryClient.invalidateQueries({ queryKey: ['journals'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
+      
       toast({
         title: data.isFavorite ? "Added to Favorites" : "Removed from Favorites",
         description: data.isFavorite 
           ? "Journal entry added to your favorites." 
           : "Journal entry removed from your favorites.",
       });
-      queryClient.invalidateQueries({ queryKey: ['journals'] });
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
-      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
     },
     onError: (error: Error) => {
       toast({

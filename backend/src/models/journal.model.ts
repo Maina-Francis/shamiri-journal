@@ -28,7 +28,12 @@ export const journalQuerySchema = z.object({
   limit: z.string().optional().transform(Number).default('10'),
   category: z.string().optional(),
   search: z.string().optional(),
-  favorite: z.string().optional().transform(val => val === 'true'),
+  favorite: z.string().optional().transform(val => {
+    // Properly transform string values to boolean
+    if (val === 'true') return true;
+    if (val === 'false') return false;
+    return val === undefined ? undefined : Boolean(val);
+  }),
   mood: z.string().optional(),
   tags: z.string().optional().transform(val => val ? val.split(',') : undefined),
 });

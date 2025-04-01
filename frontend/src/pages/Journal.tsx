@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import Editor from '@/components/journal/Editor';
@@ -130,6 +129,9 @@ const Journal = () => {
       toggleJournalFavorite(id, isFavorite),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['journals'] });
+      // Explicitly invalidate any queries that might include the favorited journal
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['journal-stats'] });
     }
   });
 
