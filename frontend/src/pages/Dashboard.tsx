@@ -1,9 +1,8 @@
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PlusCircle, Search, Trash2, BookOpen, Star, BarChart3, Calendar as CalendarIcon } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   JournalEntry,
   getJournals,
@@ -41,7 +40,7 @@ import {
 import { useDebounce } from '@/hooks/useDebounce';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const auth = useAuth();
   const queryClient = useQueryClient();
   
   // State for search, pagination and filtering
@@ -207,9 +206,13 @@ const Dashboard = () => {
   };
 
   const handleFavoriteClick = (journal: JournalEntry, isFavorite: boolean) => {
+    console.log('handleFavoriteClick called with:', journal.id, isFavorite);
+    // Ensure isFavorite is a proper boolean
+    const boolValue = isFavorite === true;
+    
     favoriteMutation.mutate({
       id: journal.id,
-      isFavorite,
+      isFavorite: boolValue,
     });
   };
 
@@ -229,7 +232,7 @@ const Dashboard = () => {
     ? statsData.recentActivity.map((item: any) => ({
         date: new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }),
         entries: Number(item.count),
-      })).reverse()
+      })).slice(0, 7).reverse() // Ensure we only show up to 7 days of data, in chronological order
     : [];
 
   // Render functions
@@ -286,7 +289,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             <p className="text-muted-foreground">
-              Welcome back, {user?.name}! Here's an overview of your journaling activity.
+              Welcome back, {auth.user?.name || 'User'}! Here's an overview of your journaling activity.
             </p>
           </div>
           <Button onClick={() => setCreateDialogOpen(true)}>
@@ -340,13 +343,15 @@ const Dashboard = () => {
                 {isLoadingStats ? (
                   <Skeleton className="h-[200px] w-full" />
                 ) : activityData.length > 0 ? (
-                  <div className="h-[200px]">
+                  <div className="h-[200px] overflow-hidden">
                     <BarChart 
                       data={activityData}
                       index="date"
                       categories={['entries']}
                       colors={['blue']}
                       valueFormatter={(value) => `${value} entries`}
+                      className="w-full h-full"
+                      yAxisWidth={30}
                     />
                   </div>
                 ) : (
@@ -411,8 +416,8 @@ const Dashboard = () => {
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious 
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
-                    disabled={page === 1} 
+                    onClick={() => page > 1 && setPage(p => p - 1)}
+                    className={page === 1 ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>
                 
@@ -429,8 +434,8 @@ const Dashboard = () => {
                 
                 <PaginationItem>
                   <PaginationNext 
-                    onClick={() => setPage(p => Math.min(data.meta.pages, p + 1))}
-                    disabled={page === data.meta.pages}
+                    onClick={() => page < data.meta.pages && setPage(p => p + 1)}
+                    className={page === data.meta.pages ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>
               </PaginationContent>

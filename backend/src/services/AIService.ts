@@ -72,7 +72,7 @@ export class AIService {
     };
     
     // Count occurrences of mood-related keywords
-    const moodCounts = { happy: 0, sad: 0, anxious: 0, angry: 0, neutral: 0 };
+    const moodCounts: Record<string, number> = { happy: 0, sad: 0, anxious: 0, angry: 0, neutral: 0 };
     const contentLower = content.toLowerCase();
     
     for (const [mood, words] of Object.entries(keywords)) {
@@ -138,8 +138,8 @@ export class AIService {
       // Extract tags from Claude's response and clean them
       const tagsText = data.content[0].text.trim();
       const tags = tagsText.split(',')
-        .map(tag => tag.trim().toLowerCase())
-        .filter(tag => tag.length > 0);
+        .map((tag: string) => tag.trim().toLowerCase())
+        .filter((tag: string) => tag.length > 0);
       
       return tags;
     } catch (error) {
@@ -178,7 +178,7 @@ export class AIService {
       }
       
       // Collect mood data
-      const moodCounts = {};
+      const moodCounts: Record<string, number> = {};
       journals.forEach(journal => {
         if (journal.mood) {
           moodCounts[journal.mood] = (moodCounts[journal.mood] || 0) + 1;
@@ -197,7 +197,7 @@ export class AIService {
       }
       
       // Collect topics/tags
-      const topicCounts = {};
+      const topicCounts: Record<string, number> = {};
       journals.forEach(journal => {
         if (journal.tags && Array.isArray(journal.tags)) {
           journal.tags.forEach(tag => {
@@ -243,7 +243,7 @@ export class AIService {
     }
     
     // Simple algorithm to detect mood trends
-    const moodValues = {
+    const moodValues: Record<string, number> = {
       'happy': 2,
       'neutral': 0,
       'sad': -1,
@@ -254,8 +254,8 @@ export class AIService {
     const recentMoods = journals.slice(0, 5).map(j => j.mood || 'neutral');
     const earlierMoods = journals.slice(-5).map(j => j.mood || 'neutral');
     
-    const recentAvg = recentMoods.reduce((sum, mood) => sum + (moodValues[mood] || 0), 0) / recentMoods.length;
-    const earlierAvg = earlierMoods.reduce((sum, mood) => sum + (moodValues[mood] || 0), 0) / earlierMoods.length;
+    const recentAvg = recentMoods.reduce((sum, mood) => sum + (moodValues[mood as keyof typeof moodValues] || 0), 0) / recentMoods.length;
+    const earlierAvg = earlierMoods.reduce((sum, mood) => sum + (moodValues[mood as keyof typeof moodValues] || 0), 0) / earlierMoods.length;
     
     if (recentAvg > earlierAvg + 0.5) {
       return "Your mood has been improving recently.";

@@ -39,6 +39,12 @@ export interface JournalStats {
   categories: { name: string; count: number }[];
   moods: { name: string; count: number }[];
   recentActivity: { date: string; count: number }[];
+  insights?: {
+    summary: string;
+    topTopics: string[];
+    suggestions: string[];
+    moodTrend: string;
+  };
 }
 
 // Create a new journal entry
@@ -144,13 +150,18 @@ export const updateJournal = async (id: string, data: Partial<JournalEntry>): Pr
 
 // Toggle favorite status
 export const toggleJournalFavorite = async (id: string, isFavorite: boolean): Promise<JournalEntry> => {
+  console.log('Toggling favorite with value:', isFavorite, 'Type:', typeof isFavorite);
+  
+  // Make sure it's a proper boolean
+  const boolValue = isFavorite === true;
+  
   const response = await fetch(`${API_URL}/journals/${id}/favorite`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     },
-    body: JSON.stringify({ isFavorite })
+    body: JSON.stringify({ isFavorite: boolValue })
   });
 
   if (!response.ok) {

@@ -1,10 +1,7 @@
-
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { LogIn, User } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,9 +41,9 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="" alt={user?.name} />
+                      <AvatarImage src="" alt={user?.name || 'User'} />
                       <AvatarFallback>
-                        {user?.name.substring(0, 2).toUpperCase() || 'U'}
+                        {user?.name ? user.name.substring(0, 2).toUpperCase() : 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </Button>

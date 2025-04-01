@@ -84,6 +84,27 @@ export class JournalController {
     }
   }
 
+  // Get all journal entries without pagination for the insights page
+  static async getAllForInsights(req: Request, res: Response) {
+    try {
+      const journals = await prisma.journal.findMany({
+        where: { 
+          userId: req.user.id 
+        },
+        orderBy: { 
+          createdAt: 'desc' 
+        },
+        // Limit to last 100 entries for performance
+        take: 100
+      });
+
+      res.json(journals);
+    } catch (error) {
+      console.error('Error in getAllForInsights journals:', error);
+      throw error;
+    }
+  }
+
   // Get a single journal by ID
   static async getOne(req: Request, res: Response) {
     try {
@@ -154,7 +175,35 @@ export class JournalController {
   // Toggle favorite status
   static async toggleFavorite(req: Request, res: Response) {
     try {
-      const { isFavorite } = toggleFavoriteSchema.parse(req.body);
+      console.log('Request body:', req.body);
+      console.log('Request body type:', typeof req.body);
+      console.log('isFavorite raw value:', req.body.isFavorite);
+      
+      // Manual validation and conversion
+      let isFavorite = false;
+      
+      if (typeof req.body.isFavorite === 'boolean') {
+        isFavorite = req.body.isFavorite;
+      } else if (req.body.isFavorite === 'true') {
+        isFavorite = true;
+      } else if (req.body.isFavorite === 'false') {
+        isFavorite = false;
+      } else if (req.body.isFavorite === 1 || req.body.isFavorite === '1') {
+        isFavorite = true;
+      } else if (req.body.isFavorite === 0 || req.body.isFavorite === '0') {
+        isFavorite = false;
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: [{
+            field: 'isFavorite',
+            message: 'Must be a boolean value'
+          }]
+        });
+      }
+      
+      console.log('Processed isFavorite:', isFavorite);
       
       const journal = await prisma.journal.findUnique({
         where: { id: req.params.id },
@@ -172,7 +221,7 @@ export class JournalController {
       // Using an explicit type cast to avoid TypeScript errors
       const updatedJournal = await prisma.journal.update({
         where: { id: req.params.id },
-        data: { isFavorite } as any,
+        data: { isFavorite },
       });
 
       res.json(updatedJournal);

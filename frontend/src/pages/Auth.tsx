@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -81,8 +80,8 @@ const Auth = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      // Redirect to the original requested URL or to journal by default
-      const from = location.state?.from || '/journal';
+      // Redirect to the original requested URL or to dashboard by default
+      const from = location.state?.from || '/dashboard';
       navigate(from);
     }
   }, [isAuthenticated, navigate, location.state]);
