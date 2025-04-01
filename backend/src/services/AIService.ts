@@ -1,6 +1,6 @@
-
 import { prisma } from '../lib/prisma.js';
 import fetch from 'node-fetch';
+import 'dotenv/config';
 
 export class AIService {
   static async analyzeMood(content: string): Promise<string> {
@@ -32,12 +32,13 @@ export class AIService {
         })
       });
       
-      const data = await response.json();
-      
       if (!response.ok) {
-        console.error("Claude API error:", data);
+        const errorData = await response.json();
+        console.error("Claude API error:", errorData);
         return this.fallbackMoodAnalysis(content);
       }
+      
+      const data = await response.json();
       
       // Extract the mood from Claude's response
       const moodResponse = data.content[0].text.trim().toLowerCase();
