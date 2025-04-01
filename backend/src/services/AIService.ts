@@ -179,7 +179,7 @@ export class AIService {
       
       // Collect mood data
       const moodCounts: Record<string, number> = {};
-      journals.forEach(journal => {
+      journals.forEach((journal: { mood?: string }) => {
         if (journal.mood) {
           moodCounts[journal.mood] = (moodCounts[journal.mood] || 0) + 1;
         }
@@ -198,9 +198,9 @@ export class AIService {
       
       // Collect topics/tags
       const topicCounts: Record<string, number> = {};
-      journals.forEach(journal => {
+      journals.forEach((journal: { tags?: string[], category?: string }) => {
         if (journal.tags && Array.isArray(journal.tags)) {
-          journal.tags.forEach(tag => {
+          journal.tags.forEach((tag: string) => {
             topicCounts[tag] = (topicCounts[tag] || 0) + 1;
           });
         }
