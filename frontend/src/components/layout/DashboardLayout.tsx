@@ -33,6 +33,11 @@ const DashboardLayout = () => {
   
   const sidebarItems = [
     {
+      title: 'Dashboard',
+      icon: <BookOpen className="h-5 w-5" />,
+      href: '/dashboard',
+    },
+    {
       title: 'Journal',
       icon: <BookOpen className="h-5 w-5" />,
       href: '/journal',
