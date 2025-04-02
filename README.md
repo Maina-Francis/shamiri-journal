@@ -2,6 +2,11 @@
 
 A modern journaling application with mood tracking, AI analysis, and personal insights.
 
+## Live Demo
+
+**Try the app here with full AI capabilities:** [https://shamiri-journal-frontend.onrender.com/](https://shamiri-journal-frontend.onrender.com)
+
+> **Note:** The application is deployed on Render's free tier, which puts services to sleep after 15 minutes of inactivity. The first load may take 1-2 minutes while the server spins up. Subsequent interactions will be much faster.
 
 ## Overview
 
