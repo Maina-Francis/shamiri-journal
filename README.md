@@ -14,6 +14,47 @@ Shamiri Journal is a full-stack web application designed to help users track the
 
 ![Image](https://github.com/user-attachments/assets/956cb0da-75ca-4a9b-80c1-7b911817a01b)
 
+## Technical Documentation
+
+For a comprehensive understanding of our system architecture and technical decisions, please refer to our detailed [System Design Document and Technical Decision Log](https://docs.google.com/document/d/1XuJ9MxEaORn4bjhuJXa-k8WK0QiaYAz-ExoQRKn67BM/edit?usp=sharing).
+
+The document covers:
+
+### 🏗 System Architecture
+- High-level architecture diagram
+- Component breakdown (Frontend, Backend, Database, AI Integration)
+- Data flow and interaction patterns
+- Integration points and external services
+
+### 🗄 Database Design
+- Complete Entity Relationship Diagram (ERD)
+- PostgreSQL schema design and justification
+- Data model optimization for journaling features
+- Performance considerations and indexing strategy
+
+### 🔒 Security Implementation
+- Authentication and authorization flow
+- JWT implementation details
+- Rate limiting and CORS policies
+- SQL injection prevention
+- Data encryption and security best practices
+
+### 📈 Scalability Analysis
+- Performance optimization strategies
+- Potential bottlenecks identification
+- Solutions for scaling to 1M+ users
+- Caching implementation
+- Load balancing considerations
+
+### 📝 Technical Decision Log
+Documented key technical decisions including:
+- Database selection (PostgreSQL vs NoSQL)
+- State management approach (Context API vs Redux)
+- Authentication strategy (JWT vs OAuth)
+- AI model selection (Claude AI vs OpenAI GPT)
+- Each decision includes problem context, options considered, final choice rationale, and trade-offs
+
+
 ## Project Structure
 
 This project is structured in two main directories:
