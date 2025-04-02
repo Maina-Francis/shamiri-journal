@@ -1,6 +1,7 @@
 import { BaseModel } from './BaseModel.js'
 import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
+import { z } from 'zod'
 
 type UserRole = 'USER' | 'ADMIN'
 
@@ -92,4 +93,37 @@ export class User extends BaseModel {
 
     return user ? new User(user) : null
   }
-} 
+}
+
+// Validation schemas
+export const loginSchema = z.object({
+  body: z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+  }),
+});
+
+export const registerSchema = z.object({
+  body: z.object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+  }),
+});
+
+export const changePasswordSchema = z.object({
+  body: z.object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: z.string().min(6, 'New password must be at least 6 characters'),
+  }),
+});
+
+// Password hashing methods
+export const hashPassword = async (password: string): Promise<string> => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+};
+
+export const comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+  return bcrypt.compare(password, hashedPassword);
+}; 

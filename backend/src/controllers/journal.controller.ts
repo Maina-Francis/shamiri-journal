@@ -13,7 +13,7 @@ export class JournalController {
   // Create a new journal
   static async create(req: Request, res: Response) {
     try {
-      const validatedData = journalSchema.parse(req.body);
+      const validatedData = journalSchema.parse({ body: req.body }).body;
       
       // Process content with AI to extract mood and tags
       const [mood, tags] = await Promise.all([
@@ -30,7 +30,10 @@ export class JournalController {
         },
       });
 
-      res.status(201).json(journal);
+      res.status(201).json({
+        success: true,
+        data: journal
+      });
     } catch (error) {
       console.error("Error creating journal:", error);
       throw error;
@@ -131,7 +134,7 @@ export class JournalController {
   // Update a journal
   static async update(req: Request, res: Response) {
     try {
-      const validatedData = journalUpdateSchema.parse(req.body);
+      const validatedData = journalUpdateSchema.parse({ body: req.body }).body;
       
       const journal = await prisma.journal.findUnique({
         where: { id: req.params.id },
@@ -147,7 +150,7 @@ export class JournalController {
       }
 
       // If content has changed, re-analyze for mood and tags
-      let updateData: any = { ...validatedData };
+      let updateData = { ...validatedData };
       
       if (validatedData.content && validatedData.content !== journal.content) {
         const [mood, tags] = await Promise.all([
@@ -159,13 +162,15 @@ export class JournalController {
         updateData.tags = tags;
       }
 
-      // Using an explicit type cast to avoid TypeScript errors
       const updatedJournal = await prisma.journal.update({
         where: { id: req.params.id },
         data: updateData,
       });
 
-      res.json(updatedJournal);
+      res.json({
+        success: true,
+        data: updatedJournal
+      });
     } catch (error) {
       console.error('Error updating journal:', error);
       throw error;

@@ -23,22 +23,6 @@ export const errorHandler = (
     });
   }
 
-  // Handle validation errors
-  if (error.name === 'ValidationError') {
-    return res.status(400).json({
-      success: false,
-      error: error.message
-    });
-  }
-
-  // Handle Prisma errors
-  if (error.name === 'PrismaClientKnownRequestError') {
-    return res.status(400).json({
-      success: false,
-      error: 'Database operation failed'
-    });
-  }
-
   // Log unexpected errors
   console.error('Unexpected error:', error);
 
@@ -47,4 +31,4 @@ export const errorHandler = (
     success: false,
     error: 'Internal server error'
   });
-};
+}; 

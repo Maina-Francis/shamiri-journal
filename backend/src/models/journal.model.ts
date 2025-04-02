@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-// Zod schema for validation
-export const journalSchema = z.object({
+// Base journal schema
+const journalDataSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   content: z.string().min(1, 'Content is required'),
   category: z.string().optional(),
@@ -12,14 +12,23 @@ export const journalSchema = z.object({
   aiInsights: z.any().optional(),
 });
 
-export type Journal = z.infer<typeof journalSchema>;
+// Wrapped schemas for validation middleware
+export const journalSchema = z.object({
+  body: journalDataSchema,
+});
 
-// Zod schema for updating journal
-export const journalUpdateSchema = journalSchema.partial();
+export type Journal = z.infer<typeof journalDataSchema>;
+
+// Update schema
+export const journalUpdateSchema = z.object({
+  body: journalDataSchema.partial(),
+});
 
 // Toggle favorite schema
 export const toggleFavoriteSchema = z.object({
-  isFavorite: z.boolean(),
+  body: z.object({
+    isFavorite: z.boolean(),
+  }),
 });
 
 // Query params schema for filtering and pagination
