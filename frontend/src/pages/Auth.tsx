@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,7 +43,10 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, register: registerUser, isAuthenticated } = useAuth();
+  const auth = useAuth();
+  const login = auth?.login;
+  const registerUser = auth?.register;
+  const isAuthenticated = auth?.isAuthenticated;
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('login');
@@ -80,16 +83,19 @@ const Auth = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      // Redirect to the original requested URL or to dashboard by default
-      const from = location.state?.from || '/dashboard';
-      navigate(from);
+      // Always redirect to dashboard after login
+      navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate, location.state]);
+  }, [isAuthenticated, navigate]);
 
   const onLoginSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
+      if (!login) {
+        setErrorMessage("Authentication service unavailable");
+        return;
+      }
       const response = await login(values.email, values.password);
       if (!response) {
         setErrorMessage("Login failed. Please check your credentials.");
@@ -106,6 +112,10 @@ const Auth = () => {
     setErrorMessage(null);
     setSuccessMessage(null);
     try {
+      if (!registerUser) {
+        setErrorMessage("Authentication service unavailable");
+        return;
+      }
       const response = await registerUser(values.name, values.email, values.password);
       if (response) {
         setSuccessMessage("Registration successful! You're now logged in.");

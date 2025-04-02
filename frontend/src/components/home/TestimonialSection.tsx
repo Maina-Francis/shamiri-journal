@@ -1,5 +1,3 @@
-
-import React from 'react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';

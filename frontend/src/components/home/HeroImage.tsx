@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Sparkles, Brain, PenLine, Lightbulb } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
 import { useIsMobile } from '@/hooks/use-mobile';

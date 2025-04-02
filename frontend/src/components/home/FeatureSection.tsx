@@ -1,6 +1,4 @@
-
-import React from 'react';
-import { PenLine, LayoutDashboard, Sparkles, CalendarDays, Brain, TrendingUp, Lock, Moon, Bookmark } from 'lucide-react';
+import { PenLine, Sparkles, CalendarDays, Brain, TrendingUp, Lock, Moon, Bookmark } from 'lucide-react';
 import AnimatedContainer from '@/components/ui/AnimatedContainer';
 
 const FeatureSection = () => {

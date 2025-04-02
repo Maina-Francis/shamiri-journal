@@ -1,15 +1,10 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  BookOpenText, 
   LineChart, 
-  Settings, 
   LogOut,
   LayoutDashboard,
   Home,
-  PieChart,
-  BarChart3,
   NotebookPen,
-  Lightbulb,
   Cog
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
