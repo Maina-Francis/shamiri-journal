@@ -144,6 +144,44 @@ export class AuthController {
     }
   }
 
+  static async updateProfile(req: CustomRequest, res: Response) {
+    try {
+      const userId = req.user?.id
+      const { name } = req.body
+      
+      if (!name || name.trim().length < 2) {
+        return res.status(400).json({
+          success: false,
+          message: 'Name must be at least 2 characters',
+        })
+      }
+
+      // Update user profile
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { name },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      })
+
+      res.json({
+        success: true,
+        message: 'Profile updated successfully',
+        data: { user: updatedUser },
+      })
+    } catch (error) {
+      console.error('Update profile error:', error)
+      res.status(500).json({
+        success: false,
+        message: 'Error updating profile',
+      })
+    }
+  }
+
   static async getCurrentUser(req: CustomRequest, res: Response) {
     try {
       const userId = req.user?.id

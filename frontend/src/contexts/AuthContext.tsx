@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import { API_URL } from '@/config/constants';
@@ -17,6 +16,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  updateUser: (userData: User) => void;
 }
 
 // Export the AuthContext to make it available for import in other files
@@ -167,6 +167,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const updateUser = (userData: User) => {
+    setUser(userData);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -177,6 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
+        updateUser,
       }}
     >
       {children}
