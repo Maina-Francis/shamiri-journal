@@ -15,11 +15,15 @@ export class JournalController {
     try {
       const validatedData = journalSchema.parse({ body: req.body }).body;
       
+      console.log(`Analyzing journal content for mood and tags: "${validatedData.content.substring(0, 100)}..."`);
+      
       // Process content with AI to extract mood and tags
       const [mood, tags] = await Promise.all([
         AIService.analyzeMood(validatedData.content),
         AIService.generateTags(validatedData.content)
       ]);
+      
+      console.log(`Analysis results - Mood: ${mood}, Tags: ${tags.join(', ')}`);
       
       const journal = await prisma.journal.create({
         data: {
@@ -29,6 +33,8 @@ export class JournalController {
           tags,
         },
       });
+
+      console.log(`Journal created with ID: ${journal.id}, Mood: ${journal.mood}, Tags: ${journal.tags.join(', ')}`);
 
       res.status(201).json({
         success: true,

@@ -12,6 +12,8 @@ export class AIService {
         return this.fallbackMoodAnalysis(content);
       }
       
+      console.log("🤖 Invoking Claude API for mood analysis...");
+      
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -43,6 +45,8 @@ export class AIService {
       // Extract the mood from Claude's response
       const moodResponse = data.content[0].text.trim().toLowerCase();
       
+      console.log(`✅ Claude API response for mood: "${moodResponse}"`);
+      
       // Normalize to our standard mood categories
       if (moodResponse.includes('happy') || moodResponse.includes('joy')) {
         return 'happy';
@@ -62,13 +66,13 @@ export class AIService {
   }
 
   private static fallbackMoodAnalysis(content: string): string {
-    // Simple keyword-based sentiment analysis
+    // Simple keyword-based sentiment analysis with more comprehensive keywords
     const keywords = {
-      happy: ['happy', 'joy', 'excited', 'great', 'wonderful', 'amazing', 'love', 'enjoyed', 'delighted'],
-      sad: ['sad', 'depressed', 'unhappy', 'miserable', 'disappointed', 'upset', 'crying', 'lonely'],
-      anxious: ['anxious', 'worried', 'nervous', 'stress', 'fear', 'panic', 'concern', 'tension'],
-      angry: ['angry', 'annoyed', 'frustrated', 'irritated', 'mad', 'furious', 'rage', 'hate'],
-      neutral: ['normal', 'fine', 'ok', 'okay', 'average', 'so-so']
+      happy: ['happy', 'joy', 'excited', 'great', 'wonderful', 'amazing', 'love', 'enjoyed', 'delighted', 'good', 'positive', 'glad', 'pleased', 'smile', 'laugh', 'awesome', 'fun'],
+      sad: ['sad', 'depressed', 'unhappy', 'miserable', 'disappointed', 'upset', 'crying', 'lonely', 'grief', 'sorrow', 'hurt', 'painful', 'regret', 'miss', 'heartbreak'],
+      anxious: ['anxious', 'worried', 'nervous', 'stress', 'fear', 'panic', 'concern', 'tension', 'afraid', 'dread', 'uneasy', 'scared', 'overwhelmed', 'apprehensive'],
+      angry: ['angry', 'annoyed', 'frustrated', 'irritated', 'mad', 'furious', 'rage', 'hate', 'upset', 'outraged', 'hostile', 'resentful', 'bitter', 'disgusted', 'infuriated'],
+      neutral: ['normal', 'fine', 'ok', 'okay', 'average', 'so-so', 'neutral', 'moderate', 'balanced', 'indifferent', 'casual']
     };
     
     // Count occurrences of mood-related keywords
@@ -96,6 +100,26 @@ export class AIService {
       }
     }
     
+    // Basic sentiment analysis if no keywords matched
+    if (highestCount === 0) {
+      // Simple text sentiment analysis
+      const positiveWords = ['good', 'nice', 'great', 'better', 'best', 'love', 'loved', 'like', 'happy', 'glad', 'joy'];
+      const negativeWords = ['bad', 'worse', 'worst', 'hate', 'dislike', 'sad', 'unhappy', 'upset', 'angry', 'mad'];
+      
+      let positiveCount = 0;
+      let negativeCount = 0;
+      
+      const words = contentLower.split(/\s+/);
+      for (const word of words) {
+        if (positiveWords.some(pos => word.includes(pos))) positiveCount++;
+        if (negativeWords.some(neg => word.includes(neg))) negativeCount++;
+      }
+      
+      if (positiveCount > negativeCount) return 'happy';
+      if (negativeCount > positiveCount) return 'sad';
+    }
+    
+    console.log(`Mood detected (fallback): ${dominantMood} for content: "${content.substring(0, 100)}..."`);
     return dominantMood;
   }
 
@@ -107,6 +131,8 @@ export class AIService {
         console.warn("Claude API key not found. Using fallback tag generation.");
         return this.fallbackTagGeneration(content);
       }
+      
+      console.log("🤖 Invoking Claude API for tag generation...");
       
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -141,6 +167,9 @@ export class AIService {
         .map((tag: string) => tag.trim().toLowerCase())
         .filter((tag: string) => tag.length > 0);
       
+      console.log(`✅ Claude API response for tags: "${tagsText}"`);
+      console.log(`✅ Processed tags: ${tags.join(', ')}`);
+      
       return tags;
     } catch (error) {
       console.error("Error generating tags:", error);
@@ -149,11 +178,58 @@ export class AIService {
   }
 
   private static fallbackTagGeneration(content: string): string[] {
-    const commonTags = ['work', 'health', 'family', 'personal', 'goals', 'travel', 'learning'];
-    const contentLower = content.toLowerCase();
+    // More comprehensive list of common topics
+    const commonTopics = [
+      'work', 'job', 'career', 'business', 'school', 'study', 'education', 'learning',
+      'health', 'fitness', 'exercise', 'diet', 'nutrition', 'wellness', 'medical',  
+      'family', 'kids', 'children', 'parents', 'marriage', 'relationship',
+      'friends', 'social', 'people', 'community',
+      'hobbies', 'interests', 'games', 'sports', 'entertainment', 'reading', 'writing',
+      'travel', 'vacation', 'trip', 'adventure', 'journey',
+      'money', 'finance', 'budget', 'spending', 'saving',
+      'home', 'house', 'apartment', 'living', 'chores',
+      'technology', 'computer', 'internet', 'phone', 'app',
+      'emotions', 'feelings', 'thoughts', 'mood', 'stress', 'anxiety',
+      'politics', 'government', 'news', 'world', 'society',
+      'goals', 'plans', 'future', 'dreams', 'aspirations'
+    ];
     
-    // Check for presence of common themes
-    return commonTags.filter(tag => contentLower.includes(tag)).slice(0, 3);
+    const contentLower = content.toLowerCase();
+    let tags: string[] = [];
+    
+    // Find topics mentioned in the content
+    for (const topic of commonTopics) {
+      if (contentLower.includes(topic)) {
+        // Group similar topics
+        if (topic === 'kids' || topic === 'children' || topic === 'parents' || topic === 'marriage') {
+          if (!tags.includes('family')) tags.push('family');
+        } else if (topic === 'job' || topic === 'career' || topic === 'business') {
+          if (!tags.includes('work')) tags.push('work');
+        } else if (topic === 'school' || topic === 'study' || topic === 'education') {
+          if (!tags.includes('learning')) tags.push('learning');
+        } else if (topic === 'fitness' || topic === 'exercise' || topic === 'diet' || topic === 'nutrition' || topic === 'wellness' || topic === 'medical') {
+          if (!tags.includes('health')) tags.push('health');
+        } else {
+          tags.push(topic);
+        }
+      }
+    }
+    
+    // If no tags found, use some basic categories based on content length and structure
+    if (tags.length === 0) {
+      const wordCount = content.split(/\s+/).length;
+      
+      if (wordCount < 50) tags.push('note');
+      else if (wordCount > 300) tags.push('reflection');
+      
+      if (content.includes('?')) tags.push('questions');
+      if (content.includes('!')) tags.push('emotions');
+    }
+    
+    // Limit to 3-5 tags and log
+    tags = tags.slice(0, 5);
+    console.log(`Tags generated (fallback): ${tags.join(', ')} for content: "${content.substring(0, 100)}..."`);
+    return tags;
   }
 
   static async generateInsights(userId: string): Promise<any> {

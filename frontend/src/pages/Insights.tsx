@@ -232,8 +232,10 @@ const Insights = () => {
                         </p>
                       </div>
                     ) : (
-                      <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-                        No mood data available
+                      <div className="h-[250px] flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
+                        <p>No mood data available</p>
+                        <p className="text-xs mt-2">Need at least 3 journal entries with mood data</p>
+                        <p className="text-xs">You currently have {journalEntries.length} entries</p>
                       </div>
                     )}
                   </CardContent>
@@ -263,8 +265,10 @@ const Insights = () => {
                       />
                       </div>
                     ) : (
-                      <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-                        No activity data available
+                      <div className="h-[250px] flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
+                        <p>No activity data available</p>
+                        <p className="text-xs mt-2">Need at least 3 journal entries</p>
+                        <p className="text-xs">You currently have {journalEntries.length} entries</p>
                       </div>
                     )}
                   </CardContent>
@@ -309,8 +313,10 @@ const Insights = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-                        No topic data available
+                      <div className="h-[250px] flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
+                        <p>No topic data available</p>
+                        <p className="text-xs mt-2">Need at least 3 journal entries with recognized topics</p>
+                        <p className="text-xs">You currently have {journalEntries.length} entries</p>
                       </div>
                     )}
                   </CardContent>
@@ -369,7 +375,13 @@ const Insights = () => {
                   ) : (
                     <div className="p-6 text-center">
                       <p className="text-muted-foreground">
-                        Continue adding journal entries to receive more detailed AI reflections.
+                        Continue adding journal entries to receive AI reflections.
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        <span className="font-medium">Required: 6 journal entries</span> • You currently have {journalEntries.length}
+                        {journalEntries.length > 0 && journalEntries.length < 6 && (
+                          <span> • Need {6 - journalEntries.length} more</span>
+                        )}
                       </p>
                       <Button 
                         variant="outline" 
@@ -414,6 +426,12 @@ const Insights = () => {
                       <h3 className="text-lg font-medium mb-2">Not enough data for mood tracking</h3>
                       <p className="text-muted-foreground mb-2">
                         Add more journal entries over time to see your mood patterns.
+                      </p>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        <span className="font-medium">Required: 8 journal entries</span> • You currently have {journalEntries.length}
+                        {journalEntries.length > 0 && journalEntries.length < 8 && (
+                          <span> • Need {8 - journalEntries.length} more</span>
+                        )}
                       </p>
                       <Button
                         variant="outline"
@@ -461,8 +479,14 @@ const Insights = () => {
                     <div className="p-6 text-center">
                       <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                       <h3 className="text-lg font-medium mb-2">No topic data available</h3>
-                      <p className="text-muted-foreground mb-4">
+                      <p className="text-muted-foreground mb-2">
                         Continue journaling to generate topic insights.
+                      </p>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        <span className="font-medium">Required: 3 journal entries</span> • You currently have {journalEntries.length}
+                        {journalEntries.length > 0 && journalEntries.length < 3 && (
+                          <span> • Need {3 - journalEntries.length} more</span>
+                        )}
                       </p>
                       <Button 
                         onClick={() => navigate('/journal')}
