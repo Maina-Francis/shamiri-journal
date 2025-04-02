@@ -17,8 +17,7 @@
       "@/*": ["src/*"]
     },
     "sourceMap": true,
-    "types": ["node", "express", "cors", "jsonwebtoken", "bcryptjs", "node-fetch"],
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "noImplicitAny": false
   },
