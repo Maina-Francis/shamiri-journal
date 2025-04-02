@@ -139,21 +139,53 @@ The frontend application will be available at http://localhost:5173 (or the next
 
 ## API Documentation
 
-### Authentication Endpoints
-- `POST /api/auth/register` - Register a new user.
-- `POST /api/auth/login` - Log in a user.
-- `GET /api/auth/me` - Get current user information.
+The API is fully documented using Swagger/OpenAPI specification. You can access the interactive API documentation in two ways:
 
-### Journal Endpoints
-- `GET /api/journals` - Get all journals (with pagination, search, filter).
-- `GET /api/journals/:id` - Get a specific journal entry.
-- `POST /api/journals` - Create a new journal entry.
-- `PUT /api/journals/:id` - Update a journal entry.
-- `DELETE /api/journals/:id` - Delete a journal entry.
-- `PATCH /api/journals/:id/favorite` - Toggle favorite status.
+### Swagger UI Documentation
+When running the backend server locally, visit:
+```
+http://localhost:5000/api-docs
+```
 
-### Journal Stats/Insights Endpoints
-- `GET /api/journals/stats` - Get journal statistics and AI insights.
+This provides an interactive interface where you can:
+- Browse all available endpoints
+- Test API endpoints directly from the browser
+- View request/response schemas
+- See authentication requirements
+- Try out endpoints with your own data
+
+### OpenAPI Specification
+Raw OpenAPI specification is available at:
+```
+http://localhost:5000/api-docs.json
+```
+
+### Authentication
+Most endpoints require authentication using JWT tokens. To authenticate:
+1. Get a token by registering (`POST /api/auth/register`) or logging in (`POST /api/auth/login`)
+2. Include the token in the Authorization header:
+```
+Authorization: Bearer your-token-here
+```
+
+### Available Endpoints
+
+#### Authentication Endpoints
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Log in a user
+- `GET /api/auth/me` - Get current user information (authenticated)
+- `POST /api/auth/change-password` - Change user password (authenticated)
+- `PUT /api/auth/profile` - Update user profile (authenticated)
+
+#### Journal Endpoints (all authenticated)
+- `GET /api/journals` - Get all journals (with pagination, search, filter)
+- `GET /api/journals/:id` - Get a specific journal entry
+- `POST /api/journals` - Create a new journal entry
+- `PUT /api/journals/:id` - Update a journal entry
+- `DELETE /api/journals/:id` - Delete a journal entry
+- `PATCH /api/journals/:id/favorite` - Toggle favorite status
+- `GET /api/journals/stats` - Get journal statistics and AI insights
+- `GET /api/journals/all` - Get all journal entries for insights
 
 ## AI Integration
 
